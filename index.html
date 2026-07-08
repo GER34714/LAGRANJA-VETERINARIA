@@ -1,0 +1,2800 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>La Granja | Veterinaria & PetShop</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome 6 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- Leaflet CSS para mapas -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    /* ==================== RESET & BASE ==================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: #ffffff;
+      color: #2d3748;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ==================== TIPOGRAFÍA ==================== */
+    h1, h2, h3, h4 {
+      font-weight: 700;
+      line-height: 1.2;
+      color: #1a202c;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      margin-bottom: 0.5rem;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 3.5vw, 2.8rem);
+      margin-bottom: 1.5rem;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      display: block;
+      width: 60px;
+      height: 4px;
+      background: #e67e22;
+      margin: 12px auto 0;
+      border-radius: 4px;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: #718096;
+      max-width: 600px;
+      margin: -1.5rem auto 3rem;
+    }
+
+    /* ==================== HEADER ==================== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+      z-index: 1000;
+      transition: all 0.3s ease;
+      padding: 12px 0;
+    }
+
+    .header.scrolled {
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+      padding: 8px 0;
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #1a202c;
+      text-decoration: none;
+    }
+
+    .logo img {
+      height: 45px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .logo-text .main {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #1a202c;
+    }
+
+    .logo-text .sub {
+      font-size: 0.6rem;
+      font-weight: 400;
+      color: #6b7b8d;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .nav-menu ul {
+      display: flex;
+      list-style: none;
+      gap: 1.8rem;
+    }
+
+    .nav-menu ul li a {
+      text-decoration: none;
+      color: #4a5568;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.2s ease;
+      position: relative;
+    }
+
+    .nav-menu ul li a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #27ae60;
+      transition: width 0.3s ease;
+    }
+
+    .nav-menu ul li a:hover {
+      color: #27ae60;
+    }
+
+    .nav-menu ul li a:hover::after {
+      width: 100%;
+    }
+
+    .btn-whatsapp-nav {
+      background: #25d366;
+      color: white !important;
+      padding: 8px 20px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-whatsapp-nav:hover {
+      background: #128c7e;
+      transform: scale(1.05);
+    }
+
+    .cart-icon {
+      position: relative;
+      cursor: pointer;
+      font-size: 1.4rem;
+      color: #2d3748;
+      transition: color 0.3s ease;
+    }
+
+    .cart-icon:hover {
+      color: #27ae60;
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -8px;
+      right: -10px;
+      background: #e67e22;
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      color: #2d3748;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    /* ==================== CARRITO LATERAL ==================== */
+    .cart-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 2000;
+      display: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .cart-overlay.active {
+      display: block;
+      opacity: 1;
+    }
+
+    .cart-sidebar {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 420px;
+      max-width: 90vw;
+      height: 100%;
+      background: white;
+      z-index: 2001;
+      transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-sidebar.open {
+      right: 0;
+    }
+
+    .cart-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cart-header h3 {
+      font-size: 1.3rem;
+      margin: 0;
+    }
+
+    .cart-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #718096;
+      transition: color 0.3s ease;
+    }
+
+    .cart-close:hover {
+      color: #e53e3e;
+    }
+
+    .cart-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+    }
+
+    .cart-empty {
+      text-align: center;
+      color: #a0aec0;
+      padding: 3rem 0;
+    }
+
+    .cart-empty i {
+      font-size: 4rem;
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid #f0f4f8;
+      align-items: center;
+    }
+
+    .cart-item-image {
+      width: 70px;
+      height: 70px;
+      border-radius: 12px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .cart-item-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .cart-item-info {
+      flex: 1;
+    }
+
+    .cart-item-info h4 {
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+
+    .cart-item-info .price {
+      color: #27ae60;
+      font-weight: 600;
+    }
+
+    .cart-item-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 4px;
+    }
+
+    .cart-item-controls button {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid #e2e8f0;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 700;
+    }
+
+    .cart-item-controls button:hover {
+      background: #27ae60;
+      color: white;
+      border-color: #27ae60;
+    }
+
+    .cart-item-controls span {
+      font-weight: 600;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    .cart-item-remove {
+      background: none;
+      border: none;
+      color: #e53e3e;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: transform 0.3s ease;
+    }
+
+    .cart-item-remove:hover {
+      transform: scale(1.2);
+    }
+
+    .cart-footer {
+      padding: 1.5rem;
+      border-top: 2px solid #e2e8f0;
+      background: #f8fafc;
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .cart-total .total-price {
+      color: #27ae60;
+    }
+
+    .btn-checkout {
+      width: 100%;
+      padding: 14px;
+      background: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-checkout:hover {
+      background: #219a52;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+    }
+
+    /* ==================== HERO ==================== */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background-image: url('https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      padding: 120px 0 60px;
+      margin-top: 0;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(26, 32, 44, 0.65);
+      z-index: 1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      color: white;
+      max-width: 800px;
+      padding: 0 20px;
+    }
+
+    .hero-logo {
+      max-width: 280px;
+      width: 100%;
+      margin: 0 auto 2rem;
+      display: block;
+      filter: drop-shadow(0 4px 20px rgba(0,0,0,0.3));
+    }
+
+    .hero-content h1 {
+      color: white;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero-content p {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .hero-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    /* ==================== BOTONES ==================== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: #27ae60;
+      color: white;
+      box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: #219a52;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(39, 174, 96, 0.4);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: white;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: #27ae60;
+      border: 2px solid #27ae60;
+    }
+
+    .btn-outline:hover {
+      background: #27ae60;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .btn-add-cart {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #27ae60;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-add-cart:hover {
+      background: #219a52;
+      transform: scale(1.05);
+    }
+
+    .btn-whatsapp-query {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #25d366;
+      color: white;
+      padding: 6px 14px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-whatsapp-query:hover {
+      background: #128c7e;
+      transform: scale(1.05);
+    }
+
+    /* ==================== HERO CARDS ==================== */
+    .hero-cards {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 3rem;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .card-feature {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 1.2rem 1rem;
+      text-align: center;
+      color: white;
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .card-feature:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-5px);
+    }
+
+    .card-feature i {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 6px;
+      color: #f39c12;
+    }
+
+    .card-feature span {
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    /* ==================== SECCIONES ==================== */
+    .section {
+      padding: 80px 0;
+    }
+
+    .section:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    /* ==================== SERVICIOS ==================== */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+
+    .card-service {
+      background: white;
+      border-radius: 20px;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .card-service:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      border-color: #27ae60;
+    }
+
+    .card-service i {
+      font-size: 2.8rem;
+      color: #27ae60;
+      margin-bottom: 1rem;
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .card-service:hover i {
+      transform: scale(1.1);
+    }
+
+    .card-service h3 {
+      color: #1a202c;
+    }
+
+    .card-service p {
+      color: #718096;
+      font-size: 0.95rem;
+    }
+
+    /* ==================== SOBRE NOSOTROS ==================== */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .about-text ul {
+      list-style: none;
+      margin-top: 1.5rem;
+    }
+
+    .about-text ul li {
+      padding: 8px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 500;
+    }
+
+    .about-text ul li i {
+      color: #27ae60;
+      font-size: 1.2rem;
+    }
+
+    .about-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 24px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .about-image img:hover {
+      transform: scale(1.02);
+    }
+
+    /* ==================== SUCURSALES ==================== */
+    .branches-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .branch-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+      border: 1px solid #f0f4f8;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      cursor: pointer;
+    }
+
+    .branch-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+      border-color: #27ae60;
+    }
+
+    .branch-card.active {
+      border-color: #27ae60;
+      background: #f0fdf4;
+    }
+
+    .branch-card i {
+      font-size: 1.8rem;
+      color: #27ae60;
+      margin-top: 4px;
+    }
+
+    .branch-card .branch-info h4 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .branch-card .branch-info p {
+      color: #718096;
+      font-size: 0.9rem;
+    }
+
+    .branch-card .branch-info .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      background: #e67e22;
+      color: white;
+      padding: 2px 10px;
+      border-radius: 12px;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .branch-card .branch-info .distance {
+      display: block;
+      font-size: 0.75rem;
+      color: #27ae60;
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .map-container {
+      margin-top: 2rem;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      height: 400px;
+      position: relative;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    .map-controls {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+      justify-content: center;
+    }
+
+    .map-control-btn {
+      padding: 8px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 50px;
+      background: white;
+      font-weight: 500;
+      font-size: 0.85rem;
+      color: #4a5568;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .map-control-btn:hover {
+      border-color: #27ae60;
+      color: #27ae60;
+    }
+
+    .map-control-btn.active {
+      background: #27ae60;
+      color: white;
+      border-color: #27ae60;
+    }
+
+    /* ==================== ESTADÍSTICAS ==================== */
+    .stats {
+      background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+      color: white;
+      padding: 70px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stats::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 300px;
+      height: 300px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+    }
+
+    .stats::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      left: -5%;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 50%;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stats-grid div {
+      padding: 1.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.3s ease;
+    }
+
+    .stats-grid div:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: scale(1.03);
+    }
+
+    .stat-number {
+      font-size: 3.5rem;
+      font-weight: 800;
+      display: block;
+      line-height: 1.2;
+      background: linear-gradient(135deg, #fff 0%, #f0fdf4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .stats-grid p {
+      font-size: 1.1rem;
+      opacity: 0.95;
+      font-weight: 500;
+      margin-top: 0.5rem;
+      color: white;
+    }
+
+    .stats-grid .stat-icon {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #f39c12;
+    }
+
+    /* ==================== CATÁLOGO / PETSHOP ==================== */
+    .catalog-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .search-input {
+      padding: 14px 20px;
+      border: 2px solid #e2e8f0;
+      border-radius: 50px;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .search-input:focus {
+      border-color: #27ae60;
+      box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.1);
+    }
+
+    .filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      justify-content: center;
+    }
+
+    .filter-btn {
+      padding: 8px 20px;
+      border: 2px solid #e2e8f0;
+      border-radius: 50px;
+      background: white;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #4a5568;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .filter-btn:hover {
+      border-color: #27ae60;
+      color: #27ae60;
+    }
+
+    .filter-btn.active {
+      background: #27ae60;
+      color: white;
+      border-color: #27ae60;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.8rem;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+      transition: all 0.3s ease;
+      border: 1px solid rgba(0, 0, 0, 0.04);
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    }
+
+    .product-image {
+      height: 180px;
+      background: #f0f4f8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-info {
+      padding: 1.2rem 1.2rem 1.5rem;
+    }
+
+    .product-info h4 {
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .product-info .category {
+      font-size: 0.75rem;
+      color: #a0aec0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .product-info .price {
+      font-weight: 700;
+      color: #27ae60;
+      font-size: 1.2rem;
+      margin: 8px 0 12px;
+    }
+
+    .product-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .product-actions .btn-add-cart {
+      flex: 1;
+      justify-content: center;
+    }
+
+    .product-actions .btn-whatsapp-query {
+      flex: 1;
+      justify-content: center;
+    }
+
+    /* ==================== MARCAS ==================== */
+    .brands-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1.5rem;
+      text-align: center;
+    }
+
+    .brands-grid div {
+      background: white;
+      padding: 1.5rem 1rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      font-weight: 600;
+      color: #4a5568;
+      border: 1px solid #f0f4f8;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .brands-grid div:hover {
+      border-color: #27ae60;
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    }
+
+    .brands-grid i {
+      font-size: 2.5rem;
+      color: #27ae60;
+    }
+
+    .brands-grid span {
+      font-size: 0.9rem;
+    }
+
+    /* ==================== MEDIOS DE PAGO ==================== */
+    .payment-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1.5rem;
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .payment-item {
+      background: white;
+      padding: 1.5rem 1rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      border: 1px solid #f0f4f8;
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .payment-item:hover {
+      border-color: #27ae60;
+      transform: translateY(-4px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+    }
+
+    .payment-item i {
+      font-size: 2.5rem;
+    }
+
+    .payment-item .badge {
+      font-size: 0.7rem;
+      background: #27ae60;
+      color: white;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+
+    /* ==================== GALERÍA ==================== */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .gallery-grid .gallery-item {
+      aspect-ratio: 1/1;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .gallery-grid .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery-grid .gallery-item:hover img {
+      transform: scale(1.08);
+    }
+
+    .gallery-grid .gallery-item:hover {
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    /* ==================== TESTIMONIOS ==================== */
+    .testimonial-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+    }
+
+    .testimonial-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+      border: 1px solid rgba(0, 0, 0, 0.04);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .testimonial-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.06);
+    }
+
+    .testimonial-card .avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto 1rem;
+    }
+
+    .testimonial-card .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .stars {
+      color: #f39c12;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      margin-bottom: 0.8rem;
+    }
+
+    .testimonial-card p {
+      font-style: italic;
+      color: #4a5568;
+      margin-bottom: 1rem;
+    }
+
+    .testimonial-author {
+      font-weight: 600;
+      color: #1a202c;
+    }
+
+    /* ==================== FAQ ==================== */
+    .faq-accordion {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      margin-bottom: 1rem;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      background: white;
+    }
+
+    .faq-item:hover {
+      border-color: #27ae60;
+    }
+
+    .faq-question {
+      width: 100%;
+      padding: 1.2rem 1.5rem;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      color: #1a202c;
+      transition: background 0.3s ease;
+    }
+
+    .faq-question:hover {
+      background: #f8fafc;
+    }
+
+    .faq-question i {
+      transition: transform 0.3s ease;
+      color: #a0aec0;
+    }
+
+    .faq-item.active .faq-question i {
+      transform: rotate(180deg);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
+      padding: 0 1.5rem;
+    }
+
+    .faq-item.active .faq-answer {
+      max-height: 300px;
+      padding: 0 1.5rem 1.5rem;
+    }
+
+    .faq-answer p {
+      color: #4a5568;
+      line-height: 1.7;
+    }
+
+    /* ==================== CONTACTO ==================== */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .contact-info p {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1rem;
+      font-size: 1.05rem;
+    }
+
+    .contact-info i {
+      color: #27ae60;
+      width: 24px;
+      font-size: 1.2rem;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .contact-form input,
+    .contact-form textarea,
+    .contact-form select {
+      padding: 14px 18px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus,
+    .contact-form select:focus {
+      border-color: #27ae60;
+      box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.08);
+    }
+
+    .contact-form textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    /* ==================== FOOTER ==================== */
+    .footer {
+      background: #1a202c;
+      color: rgba(255, 255, 255, 0.8);
+      padding: 60px 0 0;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2.5rem;
+      padding-bottom: 2.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .footer-col .logo {
+      color: white;
+      font-size: 1.4rem;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .footer-col .logo img {
+      height: 40px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .footer-col .logo-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    .footer-col .logo-text .main {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: white;
+    }
+
+    .footer-col .logo-text .sub {
+      font-size: 0.6rem;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.6);
+      letter-spacing: 0.5px;
+    }
+
+    .footer-col h4 {
+      color: white;
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      padding: 4px 0;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+      cursor: default;
+    }
+
+    .footer-col ul li:hover {
+      opacity: 1;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .social-icons a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .social-icons a:hover {
+      background: #27ae60;
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding: 1.8rem 0;
+      font-size: 0.9rem;
+      opacity: 0.6;
+    }
+
+    .footer-bottom .creator {
+      color: #27ae60;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .footer-bottom .creator:hover {
+      color: #f39c12;
+      text-decoration: underline;
+    }
+
+    /* ==================== BOTONES FLOTANTES ==================== */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #25d366;
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      text-decoration: none;
+      box-shadow: 0 6px 25px rgba(37, 211, 102, 0.4);
+      z-index: 999;
+      transition: all 0.3s ease;
+    }
+
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+      box-shadow: 0 10px 35px rgba(37, 211, 102, 0.5);
+    }
+
+    .back-to-top {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: #27ae60;
+      color: white;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(39, 174, 96, 0.3);
+      z-index: 999;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .back-to-top:hover {
+      background: #219a52;
+      transform: translateY(-4px);
+    }
+
+    /* ==================== NOTIFICACIONES ==================== */
+    .notification {
+      position: fixed;
+      bottom: 100px;
+      right: 30px;
+      background: #27ae60;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(39, 174, 96, 0.3);
+      z-index: 3000;
+      transform: translateX(120%);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      font-weight: 500;
+    }
+
+    .notification.show {
+      transform: translateX(0);
+    }
+
+    /* ==================== RESPONSIVE ==================== */
+    @media (max-width: 992px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      
+      .about-image {
+        order: -1;
+      }
+      
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      
+      .cart-sidebar {
+        width: 380px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+      
+      .nav-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 280px;
+        height: 100vh;
+        background: white;
+        flex-direction: column;
+        padding: 80px 2rem 2rem;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.08);
+        transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        gap: 1.5rem;
+        align-items: flex-start;
+      }
+      
+      .nav-menu.open {
+        right: 0;
+      }
+      
+      .nav-menu ul {
+        flex-direction: column;
+        gap: 1.2rem;
+        width: 100%;
+      }
+      
+      .nav-menu ul li a {
+        font-size: 1.1rem;
+      }
+      
+      .btn-whatsapp-nav {
+        margin-top: 0.5rem;
+      }
+      
+      .hero {
+        min-height: 90vh;
+        padding: 100px 0 40px;
+      }
+      
+      .hero-logo {
+        max-width: 200px;
+      }
+      
+      .hero-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+      }
+      
+      .grid-3 {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+      
+      .grid-4 {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .testimonial-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+      
+      .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+      
+      .brands-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      }
+      
+      .payment-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      }
+      
+      .branches-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+      
+      .cart-sidebar {
+        width: 100%;
+        max-width: 100%;
+      }
+      
+      .logo img {
+        height: 35px;
+      }
+      
+      .logo-text .main {
+        font-size: 1rem;
+      }
+      
+      .logo-text .sub {
+        font-size: 0.5rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-buttons .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .hero-cards {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .hero-logo {
+        max-width: 160px;
+      }
+      
+      .card-feature {
+        padding: 0.8rem 0.5rem;
+      }
+      
+      .card-feature i {
+        font-size: 1.5rem;
+      }
+      
+      .grid-4 {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+      
+      .product-image {
+        height: 130px;
+      }
+      
+      .product-info {
+        padding: 0.8rem;
+      }
+      
+      .product-info h4 {
+        font-size: 0.9rem;
+      }
+      
+      .product-actions {
+        flex-direction: column;
+      }
+      
+      .product-actions .btn-add-cart,
+      .product-actions .btn-whatsapp-query {
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .filter-group {
+        gap: 0.4rem;
+      }
+      
+      .filter-btn {
+        padding: 6px 14px;
+        font-size: 0.8rem;
+      }
+      
+      .section {
+        padding: 50px 0;
+      }
+      
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .map-container {
+        height: 250px;
+      }
+    }
+
+    /* ==================== ANIMACIONES SCROLL ==================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== HEADER ==================== -->
+  <header id="header" class="header">
+    <div class="container header-container">
+      <a href="#inicio" class="logo">
+        <img src="https://fhxcumwhgtfirznnznjx.supabase.co/storage/v1/object/public/IMAGEN%20VETERINARIA/ChatGPT%20Image%207%20jul%202026,%2005_44_46%20p.m..png" alt="La Granja Veterinaria" loading="lazy">
+        <div class="logo-text">
+          <span class="main">La Granja</span>
+          <span class="sub">VETERINARIA & PETSHOP</span>
+        </div>
+      </a>
+      <nav class="nav-menu" id="navMenu">
+        <ul>
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#servicios">Servicios</a></li>
+          <li><a href="#petshop">PetShop</a></li>
+          <li><a href="#sucursales">Sucursales</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+        <a href="https://wa.me/5491123456789" target="_blank" class="btn-whatsapp-nav">
+          <i class="fab fa-whatsapp"></i> WhatsApp
+        </a>
+        <div class="cart-icon" id="cartIcon">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-badge" id="cartBadge">0</span>
+        </div>
+      </nav>
+      <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ==================== CARRITO LATERAL ==================== -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <div class="cart-sidebar" id="cartSidebar">
+    <div class="cart-header">
+      <h3><i class="fas fa-shopping-cart"></i> Mi Carrito</h3>
+      <button class="cart-close" id="cartClose"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="cart-body" id="cartBody">
+      <div class="cart-empty">
+        <i class="fas fa-shopping-basket"></i>
+        <p>Tu carrito está vacío</p>
+        <p style="font-size: 0.9rem; margin-top: 0.5rem;">¡Agregá productos para comenzar tu compra!</p>
+      </div>
+      <div id="cartItems"></div>
+    </div>
+    <div class="cart-footer" id="cartFooter" style="display: none;">
+      <div class="cart-total">
+        <span>Total:</span>
+        <span class="total-price" id="cartTotal">$0</span>
+      </div>
+      <button class="btn-checkout" id="checkoutBtn">
+        <i class="fab fa-whatsapp"></i> Finalizar compra por WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== NOTIFICACIÓN ==================== -->
+  <div class="notification" id="notification">✅ Producto agregado al carrito</div>
+
+  <!-- ==================== HERO ==================== -->
+  <section id="inicio" class="hero">
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <img src="https://fhxcumwhgtfirznnznjx.supabase.co/storage/v1/object/public/IMAGEN%20VETERINARIA/ChatGPT%20Image%207%20jul%202026,%2005_44_46%20p.m..png" alt="La Granja Veterinaria" class="hero-logo" loading="lazy">
+      <h1>Cuidado y amor para tu mejor amigo</h1>
+      <p>Clínica, peluquería, pet shop y envíos. Todo lo que tu mascota necesita en un solo lugar.</p>
+      <div class="hero-buttons">
+        <a href="#contacto" class="btn btn-primary">Agendar consulta</a>
+        <a href="#petshop" class="btn btn-secondary">Ver productos</a>
+      </div>
+    </div>
+    <div class="container hero-cards">
+      <div class="card-feature"><i class="fas fa-stethoscope"></i><span>Clínica</span></div>
+      <div class="card-feature"><i class="fas fa-cut"></i><span>Peluquería</span></div>
+      <div class="card-feature"><i class="fas fa-store"></i><span>PetShop</span></div>
+      <div class="card-feature"><i class="fas fa-truck"></i><span>Envíos</span></div>
+    </div>
+  </section>
+
+  <!-- ==================== SERVICIOS ==================== -->
+  <section id="servicios" class="section servicios">
+    <div class="container">
+      <h2 class="section-title">Nuestros servicios</h2>
+      <p class="section-subtitle">Ofrecemos atención integral para el bienestar de tu mascota</p>
+      <div class="grid-3">
+        <div class="card-service">
+          <i class="fas fa-heartbeat"></i>
+          <h3>Consultas generales</h3>
+          <p>Revisión completa, vacunación y desparasitación.</p>
+        </div>
+        <div class="card-service">
+          <i class="fas fa-bone"></i>
+          <h3>Odontología</h3>
+          <p>Limpieza dental y extracciones sin dolor.</p>
+        </div>
+        <div class="card-service">
+          <i class="fas fa-syringe"></i>
+          <h3>Vacunación</h3>
+          <p>Calendario completo y certificado internacional.</p>
+        </div>
+        <div class="card-service">
+          <i class="fas fa-scissors"></i>
+          <h3>Peluquería canina</h3>
+          <p>Baño, corte, cepillado y estilo premium.</p>
+        </div>
+        <div class="card-service">
+          <i class="fas fa-paw"></i>
+          <h3>Nutrición</h3>
+          <p>Planes de alimentación balanceada.</p>
+        </div>
+        <div class="card-service">
+          <i class="fas fa-ambulance"></i>
+          <h3>Urgencias</h3>
+          <p>Atención inmediata las 24 horas.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SOBRE NOSOTROS ==================== -->
+  <section id="about" class="section about">
+    <div class="container about-grid">
+      <div class="about-text">
+        <h2>Sobre nosotros</h2>
+        <p>En <strong>La Granja</strong> somos un equipo apasionado por la salud y el bienestar animal. Contamos con más de 15 años de experiencia y las mejores instalaciones para brindar atención de calidad.</p>
+        <ul>
+          <li><i class="fas fa-check-circle"></i> Profesionales certificados</li>
+          <li><i class="fas fa-check-circle"></i> Equipos de última generación</li>
+          <li><i class="fas fa-check-circle"></i> Atención personalizada</li>
+          <li><i class="fas fa-check-circle"></i> Ambiente seguro y limpio</li>
+        </ul>
+      </div>
+      <div class="about-image">
+        <img src="https://images.unsplash.com/photo-1582562124811-c09040d0a901?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Veterinaria La Granja" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== SUCURSALES ==================== -->
+  <section id="sucursales" class="section" style="background: #f8fafc;">
+    <div class="container">
+      <h2 class="section-title">Nuestras sucursales</h2>
+      <p class="section-subtitle">Encontrá la sucursal más cercana a tu hogar</p>
+      <div class="branches-grid" id="branchesGrid">
+        <div class="branch-card active" data-branch="garin">
+          <i class="fas fa-store"></i>
+          <div class="branch-info">
+            <h4>Garín</h4>
+            <p>Cigliutti 201</p>
+            <span class="badge">Atención 24h</span>
+            <span class="distance" id="dist-garin">📍 Cerca de vos</span>
+          </div>
+        </div>
+        <div class="branch-card" data-branch="benavidez">
+          <i class="fas fa-store"></i>
+          <div class="branch-info">
+            <h4>Benavídez</h4>
+            <p>Belgrano 2620</p>
+            <span class="badge">PetShop + Clínica</span>
+            <span class="distance" id="dist-benavidez">📍 Cerca de vos</span>
+          </div>
+        </div>
+        <div class="branch-card" data-branch="tortuguitas">
+          <i class="fas fa-store"></i>
+          <div class="branch-info">
+            <h4>Tortuguitas</h4>
+            <p>Av. Constituyentes y Panamericana, ramal Pilar</p>
+            <span class="badge">Estacionamiento propio</span>
+            <span class="distance" id="dist-tortuguitas">📍 Cerca de vos</span>
+          </div>
+        </div>
+        <div class="branch-card" data-branch="escobar">
+          <i class="fas fa-store"></i>
+          <div class="branch-info">
+            <h4>Escobar</h4>
+            <p>Av. 25 de Mayo 1301</p>
+            <span class="badge">Peluquería premium</span>
+            <span class="distance" id="dist-escobar">📍 Cerca de vos</span>
+          </div>
+        </div>
+        <div class="branch-card" data-branch="josecpaz">
+          <i class="fas fa-store"></i>
+          <div class="branch-info">
+            <h4>José C. Paz</h4>
+            <p>Av. Hipólito Irigoyen 894</p>
+            <span class="badge">Urgencias 24h</span>
+            <span class="distance" id="dist-josecpaz">📍 Cerca de vos</span>
+          </div>
+        </div>
+        <div class="branch-card" data-branch="tortugas">
+          <i class="fas fa-store"></i>
+          <div class="branch-info">
+            <h4>Tortugas Open Mall</h4>
+            <p>Local R02B</p>
+            <span class="badge">Shopping</span>
+            <span class="distance" id="dist-tortugas">📍 Cerca de vos</span>
+          </div>
+        </div>
+      </div>
+      <div class="map-container">
+        <div id="map"></div>
+      </div>
+      <div class="map-controls" id="mapControls">
+        <button class="map-control-btn active" data-branch="garin">Garín</button>
+        <button class="map-control-btn" data-branch="benavidez">Benavídez</button>
+        <button class="map-control-btn" data-branch="tortuguitas">Tortuguitas</button>
+        <button class="map-control-btn" data-branch="escobar">Escobar</button>
+        <button class="map-control-btn" data-branch="josecpaz">José C. Paz</button>
+        <button class="map-control-btn" data-branch="tortugas">Tortugas Mall</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== ESTADÍSTICAS ==================== -->
+  <section class="section stats">
+    <div class="container stats-grid">
+      <div>
+        <span class="stat-icon"><i class="fas fa-paw"></i></span>
+        <span class="stat-number" data-count="12450">0</span>
+        <p>Mascotas atendidas</p>
+      </div>
+      <div>
+        <span class="stat-icon"><i class="fas fa-smile"></i></span>
+        <span class="stat-number" data-count="8750">0</span>
+        <p>Clientes felices</p>
+      </div>
+      <div>
+        <span class="stat-icon"><i class="fas fa-calendar-check"></i></span>
+        <span class="stat-number" data-count="15">0</span>
+        <p>Años de experiencia</p>
+      </div>
+      <div>
+        <span class="stat-icon"><i class="fas fa-boxes"></i></span>
+        <span class="stat-number" data-count="3200">0</span>
+        <p>Productos disponibles</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PETSHOP ==================== -->
+  <section id="petshop" class="section catalog">
+    <div class="container">
+      <h2 class="section-title">PetShop</h2>
+      <p class="section-subtitle">Encontrá todo lo que necesitas para tu mascota</p>
+      <div class="catalog-controls">
+        <input type="text" id="searchInput" placeholder="Buscar producto..." class="search-input">
+        <div class="filter-group" id="filterGroup">
+          <button class="filter-btn active" data-filter="todos">Todos</button>
+          <button class="filter-btn" data-filter="alimento">Alimento</button>
+          <button class="filter-btn" data-filter="accesorio">Accesorios</button>
+          <button class="filter-btn" data-filter="higiene">Higiene</button>
+        </div>
+      </div>
+      <div class="grid-4" id="productGrid"></div>
+    </div>
+  </section>
+
+  <!-- ==================== MARCAS ==================== -->
+  <section class="section brands">
+    <div class="container">
+      <h2 class="section-title">Marcas aliadas</h2>
+      <p class="section-subtitle">Trabajamos con las mejores marcas del mercado</p>
+      <div class="brands-grid">
+        <div><i class="fas fa-dog"></i><span>Royal Canin</span></div>
+        <div><i class="fas fa-dog"></i><span>Pro Plan</span></div>
+        <div><i class="fas fa-dog"></i><span>Purina</span></div>
+        <div><i class="fas fa-dog"></i><span>Vitalcan</span></div>
+        <div><i class="fas fa-dog"></i><span>Excellent</span></div>
+        <div><i class="fas fa-dog"></i><span>Pedigree</span></div>
+        <div><i class="fas fa-dog"></i><span>Whiskas</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== MEDIOS DE PAGO ==================== -->
+  <section class="section" style="background: #f8fafc;">
+    <div class="container">
+      <h2 class="section-title">Medios de pago</h2>
+      <p class="section-subtitle">Pagá de la forma que más te convenga</p>
+      <div class="payment-grid">
+        <div class="payment-item">
+          <i class="fab fa-cc-visa" style="color: #1a1f71;"></i>
+          <span>Visa</span>
+        </div>
+        <div class="payment-item">
+          <i class="fab fa-cc-mastercard" style="color: #eb001b;"></i>
+          <span>Mastercard</span>
+        </div>
+        <div class="payment-item">
+          <i class="fab fa-cc-amex" style="color: #006fcf;"></i>
+          <span>American Express</span>
+        </div>
+        <div class="payment-item">
+          <i class="fas fa-university" style="color: #1a73e8;"></i>
+          <span>Transferencia</span>
+        </div>
+        <div class="payment-item">
+          <i class="fas fa-qrcode" style="color: #25d366;"></i>
+          <span>Mercado Pago</span>
+          <span class="badge">+10% off</span>
+        </div>
+        <div class="payment-item">
+          <i class="fas fa-bolt" style="color: #f39c12;"></i>
+          <span>Efectivo</span>
+        </div>
+        <div class="payment-item">
+          <i class="fas fa-credit-card" style="color: #e67e22;"></i>
+          <span>Tarjeta débito</span>
+        </div>
+        <div class="payment-item">
+          <i class="fas fa-mobile-alt" style="color: #8e44ad;"></i>
+          <span>QR</span>
+          <span class="badge">Nuevo</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== GALERÍA ==================== -->
+  <section class="section gallery">
+    <div class="container">
+      <h2 class="section-title">Galería</h2>
+      <p class="section-subtitle">Conocé nuestras instalaciones y el cuidado que brindamos</p>
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </div>
+  </section>
+
+  <!-- ==================== TESTIMONIOS ==================== -->
+  <section class="section testimonials">
+    <div class="container">
+      <h2 class="section-title">Testimonios</h2>
+      <p class="section-subtitle">Lo que dicen nuestros clientes</p>
+      <div class="testimonial-grid">
+        <div class="testimonial-card">
+          <div class="avatar">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Laura">
+          </div>
+          <div class="stars">★★★★★</div>
+          <p>"Atención increíble, mi perro siempre vuelve feliz. El equipo es muy profesional y cálido."</p>
+          <div class="testimonial-author">— Laura G.</div>
+        </div>
+        <div class="testimonial-card">
+          <div class="avatar">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Carlos">
+          </div>
+          <div class="stars">★★★★★</div>
+          <p>"El mejor pet shop de la zona, calidad y precio. Siempre tienen todo lo que necesito."</p>
+          <div class="testimonial-author">— Carlos M.</div>
+        </div>
+        <div class="testimonial-card">
+          <div class="avatar">
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Sofía">
+          </div>
+          <div class="stars">★★★★★</div>
+          <p>"Confío plenamente en los veterinarios de La Granja. Explican todo con claridad y amor."</p>
+          <div class="testimonial-author">— Sofía R.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PREGUNTAS FRECUENTES ==================== -->
+  <section class="section faq">
+    <div class="container">
+      <h2 class="section-title">Preguntas frecuentes</h2>
+      <div class="faq-accordion">
+        <div class="faq-item">
+          <button class="faq-question">¿Cuáles son los horarios de atención? <i class="fas fa-chevron-down"></i></button>
+          <div class="faq-answer"><p>Lunes a sábados de 8:00 a 20:00 h. Domingos y feriados atención solo urgencias.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">¿Ofrecen servicio de urgencias? <i class="fas fa-chevron-down"></i></button>
+          <div class="faq-answer"><p>Sí, contamos con atención de urgencias 24 horas los 365 días del año.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">¿Hacen envíos a domicilio? <i class="fas fa-chevron-down"></i></button>
+          <div class="faq-answer"><p>Sí, realizamos envíos a todo CABA y GBA en el día. Consultá por tu zona.</p></div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">¿Aceptan seguros médicos para mascotas? <i class="fas fa-chevron-down"></i></button>
+          <div class="faq-answer"><p>Aceptamos las principales coberturas. Consultanos para más información.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CONTACTO ==================== -->
+  <section id="contacto" class="section contact">
+    <div class="container">
+      <h2 class="section-title">Contacto</h2>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <p><i class="fas fa-map-pin"></i> Sucursal Central: Av. Libertador 1234, CABA</p>
+          <p><i class="fas fa-phone"></i> +54 11 2345-6789</p>
+          <p><i class="fab fa-whatsapp"></i> +54 9 11 2345-6789</p>
+          <p><i class="fas fa-envelope"></i> info@lagranjavet.com</p>
+        </div>
+        <form class="contact-form" id="contactForm">
+          <input type="text" placeholder="Nombre completo" required>
+          <input type="email" placeholder="Correo electrónico" required>
+          <input type="tel" placeholder="Teléfono">
+          <select id="branchSelect">
+            <option value="">¿Qué sucursal te queda más cerca?</option>
+            <option value="garin">Garín - Cigliutti 201</option>
+            <option value="benavidez">Benavídez - Belgrano 2620</option>
+            <option value="tortuguitas">Tortuguitas - Av. Constituyentes y Panamericana</option>
+            <option value="escobar">Escobar - Av. 25 de Mayo 1301</option>
+            <option value="josecpaz">José C. Paz - Av. Hipólito Irigoyen 894</option>
+            <option value="tortugas">Tortugas Open Mall - Local R02B</option>
+          </select>
+          <textarea rows="4" placeholder="Mensaje" required></textarea>
+          <button type="submit" class="btn btn-primary">Enviar mensaje</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div class="footer-col">
+        <div class="logo">
+          <img src="https://fhxcumwhgtfirznnznjx.supabase.co/storage/v1/object/public/IMAGEN%20VETERINARIA/ChatGPT%20Image%207%20jul%202026,%2005_44_46%20p.m..png" alt="La Granja" loading="lazy">
+          <div class="logo-text">
+            <span class="main">La Granja</span>
+            <span class="sub">VETERINARIA & PETSHOP</span>
+          </div>
+        </div>
+        <p>Cuidado y amor para tu mascota.</p>
+        <div style="margin-top: 1rem;">
+          <p style="font-size: 0.8rem; opacity: 0.7;">
+            <i class="fas fa-store"></i> 6 sucursales en zona norte
+          </p>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Servicios</h4>
+        <ul>
+          <li>Clínica veterinaria</li>
+          <li>Peluquería</li>
+          <li>PetShop</li>
+          <li>Envíos a domicilio</li>
+          <li>Urgencias 24h</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Horarios</h4>
+        <ul>
+          <li>Lun a Sáb: 8:00 - 20:00</li>
+          <li>Domingos: Urgencias</li>
+          <li>Feriados: Urgencias</li>
+        </ul>
+        <div style="margin-top: 1rem;">
+          <a href="https://wa.me/5491123456789" target="_blank" style="color: #25d366; text-decoration: none;">
+            <i class="fab fa-whatsapp"></i> +54 9 11 2345-6789
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Seguinos</h4>
+        <div class="social-icons">
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+          <a href="#"><i class="fab fa-tiktok"></i></a>
+        </div>
+        <div style="margin-top: 1.5rem;">
+          <p style="font-size: 0.8rem; opacity: 0.6;">
+            <i class="fas fa-credit-card"></i> Aceptamos todos los medios
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>
+        &copy; 2026 La Granja Veterinaria. Todos los derechos reservados. | 
+        Creado y diseñado por 
+        <a href="https://ciborg347.onrender.com" target="_blank" class="creator">CIBORG347</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- Botón Volver Arriba -->
+  <button id="backToTop" class="back-to-top"><i class="fas fa-arrow-up"></i></button>
+  <!-- WhatsApp Flotante -->
+  <a href="https://wa.me/5491123456789" target="_blank" class="whatsapp-float">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <!-- ==================== JAVASCRIPT ==================== -->
+  <script>
+    // ============================================
+    // 1. HEADER STICKY + SCROLL EFFECT
+    // ============================================
+    const header = document.getElementById('header');
+    let lastScroll = 0;
+
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      
+      if (currentScroll > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+      
+      lastScroll = currentScroll;
+    });
+
+    // ============================================
+    // 2. MENÚ MÓVIL
+    // ============================================
+    const menuToggle = document.getElementById('menuToggle');
+    const navMenu = document.getElementById('navMenu');
+
+    menuToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('open');
+      const icon = menuToggle.querySelector('i');
+      if (navMenu.classList.contains('open')) {
+        icon.className = 'fas fa-times';
+      } else {
+        icon.className = 'fas fa-bars';
+      }
+    });
+
+    document.querySelectorAll('.nav-menu ul li a').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('open');
+        menuToggle.querySelector('i').className = 'fas fa-bars';
+      });
+    });
+
+    // ============================================
+    // 3. BOTÓN VOLVER ARRIBA
+    // ============================================
+    const backToTop = document.getElementById('backToTop');
+
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 400) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    });
+
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // ============================================
+    // 4. ANIMACIÓN DE CONTADORES
+    // ============================================
+    const statNumbers = document.querySelectorAll('.stat-number');
+
+    function animateCounter(el) {
+      const target = parseInt(el.getAttribute('data-count'));
+      const duration = 2000;
+      const startTime = performance.now();
+      
+      function updateCounter(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 4);
+        const current = Math.floor(eased * target);
+        el.textContent = current.toLocaleString();
+        
+        if (progress < 1) {
+          requestAnimationFrame(updateCounter);
+        } else {
+          el.textContent = target.toLocaleString();
+        }
+      }
+      
+      requestAnimationFrame(updateCounter);
+    }
+
+    const statsSection = document.querySelector('.stats');
+    let countersAnimated = false;
+
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !countersAnimated) {
+          countersAnimated = true;
+          statNumbers.forEach(stat => animateCounter(stat));
+        }
+      });
+    }, { threshold: 0.3 });
+
+    if (statsSection) statsObserver.observe(statsSection);
+
+    // ============================================
+    // 5. ANIMACIONES SCROLL
+    // ============================================
+    const revealElements = document.querySelectorAll('.card-service, .about-grid, .testimonial-card, .brands-grid div, .gallery-item, .contact-grid, .payment-item, .branch-card');
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+
+    revealElements.forEach(el => {
+      el.classList.add('reveal');
+      revealObserver.observe(el);
+    });
+
+    // ============================================
+    // 6. CARRITO DE COMPRAS
+    // ============================================
+    let cart = [];
+    const cartIcon = document.getElementById('cartIcon');
+    const cartSidebar = document.getElementById('cartSidebar');
+    const cartOverlay = document.getElementById('cartOverlay');
+    const cartClose = document.getElementById('cartClose');
+    const cartBody = document.getElementById('cartBody');
+    const cartItems = document.getElementById('cartItems');
+    const cartFooter = document.getElementById('cartFooter');
+    const cartTotal = document.getElementById('cartTotal');
+    const cartBadge = document.getElementById('cartBadge');
+    const notification = document.getElementById('notification');
+    let notificationTimeout;
+
+    // Abrir carrito
+    cartIcon.addEventListener('click', () => {
+      cartSidebar.classList.add('open');
+      cartOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+
+    // Cerrar carrito
+    function closeCart() {
+      cartSidebar.classList.remove('open');
+      cartOverlay.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    cartClose.addEventListener('click', closeCart);
+    cartOverlay.addEventListener('click', closeCart);
+
+    // Agregar al carrito
+    function addToCart(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+
+      const existingItem = cart.find(item => item.id === productId);
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        cart.push({
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          img: product.img,
+          quantity: 1
+        });
+      }
+
+      updateCart();
+      showNotification(`✅ ${product.name} agregado al carrito`);
+    }
+
+    // Eliminar del carrito
+    function removeFromCart(productId) {
+      cart = cart.filter(item => item.id !== productId);
+      updateCart();
+    }
+
+    // Actualizar cantidad
+    function updateQuantity(productId, change) {
+      const item = cart.find(item => item.id === productId);
+      if (!item) return;
+
+      item.quantity += change;
+      if (item.quantity <= 0) {
+        removeFromCart(productId);
+      } else {
+        updateCart();
+      }
+    }
+
+    // Actualizar carrito
+    function updateCart() {
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      cartBadge.textContent = totalItems;
+
+      const cartEmpty = document.querySelector('.cart-empty');
+      if (cart.length === 0) {
+        cartItems.innerHTML = '';
+        cartEmpty.style.display = 'block';
+        cartFooter.style.display = 'none';
+      } else {
+        cartEmpty.style.display = 'none';
+        cartFooter.style.display = 'block';
+        
+        cartItems.innerHTML = cart.map(item => `
+          <div class="cart-item">
+            <div class="cart-item-image">
+              <img src="${item.img}" alt="${item.name}">
+            </div>
+            <div class="cart-item-info">
+              <h4>${item.name}</h4>
+              <div class="price">$${item.price.toLocaleString()}</div>
+              <div class="cart-item-controls">
+                <button onclick="updateQuantity(${item.id}, -1)">-</button>
+                <span>${item.quantity}</span>
+                <button onclick="updateQuantity(${item.id}, 1)">+</button>
+              </div>
+            </div>
+            <button class="cart-item-remove" onclick="removeFromCart(${item.id})">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        `).join('');
+
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        cartTotal.textContent = `$${total.toLocaleString()}`;
+      }
+    }
+
+    // Mostrar notificación
+    function showNotification(message) {
+      notification.textContent = message;
+      notification.classList.add('show');
+      clearTimeout(notificationTimeout);
+      notificationTimeout = setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+
+    // Finalizar compra
+    document.getElementById('checkoutBtn').addEventListener('click', () => {
+      if (cart.length === 0) return;
+      
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const itemsList = cart.map(item => 
+        `- ${item.name} x${item.quantity} ($${(item.price * item.quantity).toLocaleString()})`
+      ).join('\n');
+      
+      const message = `Hola! Quiero realizar una compra en La Granja:\n\n${itemsList}\n\nTotal: $${total.toLocaleString()}\n\nSucursal: (elegir en el local)\nMedio de pago: (consultar)`;
+      
+      window.open(`https://wa.me/5491123456789?text=${encodeURIComponent(message)}`, '_blank');
+      closeCart();
+    });
+
+    // ============================================
+    // 7. CATÁLOGO DE PRODUCTOS
+    // ============================================
+    const products = [
+      { id: 1, name: 'Royal Canin Adulto', category: 'alimento', price: 12500, img: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 2, name: 'Pro Plan OptiHealth', category: 'alimento', price: 14200, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 3, name: 'Purina Excellent', category: 'alimento', price: 9800, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 4, name: 'Vitalcan Cordero', category: 'alimento', price: 11300, img: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 5, name: 'Pedigree Adulto', category: 'alimento', price: 7600, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 6, name: 'Whiskas Pescado', category: 'alimento', price: 6900, img: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 7, name: 'Correa reflectante', category: 'accesorio', price: 4200, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 8, name: 'Cama ortopédica', category: 'accesorio', price: 18500, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 9, name: 'Juguete cuerda', category: 'accesorio', price: 3800, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 10, name: 'Bebedero automático', category: 'accesorio', price: 8900, img: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 11, name: 'Arnés de seguridad', category: 'accesorio', price: 6400, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 12, name: 'Rascador para gatos', category: 'accesorio', price: 15200, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 13, name: 'Shampoo antipulgas', category: 'higiene', price: 5300, img: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 14, name: 'Cepillo desenredante', category: 'higiene', price: 2900, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 15, name: 'Cortaúñas profesional', category: 'higiene', price: 4700, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 16, name: 'Limpieza de oídos', category: 'higiene', price: 3400, img: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 17, name: 'Pasta dental canina', category: 'higiene', price: 4100, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 18, name: 'Toallitas húmedas', category: 'higiene', price: 2600, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 19, name: 'Alimento para cachorros', category: 'alimento', price: 10800, img: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 20, name: 'Alimento senior', category: 'alimento', price: 11900, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 21, name: 'Transportín plegable', category: 'accesorio', price: 22300, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 22, name: 'Bola dispensadora', category: 'accesorio', price: 5600, img: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 23, name: 'Repelente de pulgas', category: 'higiene', price: 7200, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 24, name: 'Acondicionador de pelo', category: 'higiene', price: 4800, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+    ];
+
+    const productGrid = document.getElementById('productGrid');
+    const searchInput = document.getElementById('searchInput');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+
+    function renderProducts(filter = 'todos', search = '') {
+      const filtered = products.filter(p => {
+        const matchFilter = filter === 'todos' || p.category === filter;
+        const matchSearch = p.name.toLowerCase().includes(search.toLowerCase());
+        return matchFilter && matchSearch;
+      });
+
+      if (filtered.length === 0) {
+        productGrid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #718096; padding: 2rem;">No se encontraron productos.</p>`;
+        return;
+      }
+
+      productGrid.innerHTML = filtered.map(p => `
+        <div class="product-card">
+          <div class="product-image">
+            <img src="${p.img}" alt="${p.name}" loading="lazy">
+          </div>
+          <div class="product-info">
+            <h4>${p.name}</h4>
+            <div class="category">${p.category}</div>
+            <div class="price">$${p.price.toLocaleString()}</div>
+            <div class="product-actions">
+              <button class="btn-add-cart" onclick="addToCart(${p.id})">
+                <i class="fas fa-cart-plus"></i> Agregar
+              </button>
+              <a href="https://wa.me/5491123456789?text=Hola!%20Quiero%20consultar%20por%20${encodeURIComponent(p.name)}" target="_blank" class="btn-whatsapp-query">
+                <i class="fab fa-whatsapp"></i> Consultar
+              </a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.getAttribute('data-filter');
+        renderProducts(filter, searchInput.value);
+      });
+    });
+
+    searchInput.addEventListener('input', () => {
+      const activeFilter = document.querySelector('.filter-btn.active');
+      const filter = activeFilter ? activeFilter.getAttribute('data-filter') : 'todos';
+      renderProducts(filter, searchInput.value);
+    });
+
+    renderProducts();
+
+    // ============================================
+    // 8. GALERÍA
+    // ============================================
+    const galleryGrid = document.getElementById('galleryGrid');
+    const galleryImages = [
+      'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1582562124811-c09040d0a901?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1582571996120-716e13ef9c6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
+      'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
+    ];
+
+    galleryImages.forEach(src => {
+      const item = document.createElement('div');
+      item.className = 'gallery-item';
+      item.innerHTML = `<img src="${src}" alt="Galería La Granja" loading="lazy">`;
+      galleryGrid.appendChild(item);
+    });
+
+    // ============================================
+    // 9. FAQ ACORDEÓN
+    // ============================================
+    const faqItems = document.querySelectorAll('.faq-item');
+
+    faqItems.forEach(item => {
+      const question = item.querySelector('.faq-question');
+      question.addEventListener('click', () => {
+        faqItems.forEach(other => {
+          if (other !== item && other.classList.contains('active')) {
+            other.classList.remove('active');
+          }
+        });
+        item.classList.toggle('active');
+      });
+    });
+
+    // ============================================
+    // 10. FORMULARIO DE CONTACTO
+    // ============================================
+    const contactForm = document.getElementById('contactForm');
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('¡Gracias por contactarnos! Te responderemos a la brevedad.');
+      contactForm.reset();
+    });
+
+    // ============================================
+    // 11. MAPA INTERACTIVO
+    // ============================================
+    const branchCoordinates = {
+      garin: { lat: -34.4197, lng: -58.8431, name: 'Garín', address: 'Cigliutti 201' },
+      benavidez: { lat: -34.4062, lng: -58.7064, name: 'Benavídez', address: 'Belgrano 2620' },
+      tortuguitas: { lat: -34.4583, lng: -58.7597, name: 'Tortuguitas', address: 'Av. Constituyentes y Panamericana' },
+      escobar: { lat: -34.3500, lng: -58.7933, name: 'Escobar', address: 'Av. 25 de Mayo 1301' },
+      josecpaz: { lat: -34.5241, lng: -58.7722, name: 'José C. Paz', address: 'Av. Hipólito Irigoyen 894' },
+      tortugas: { lat: -34.4533, lng: -58.7100, name: 'Tortugas Open Mall', address: 'Local R02B' }
+    };
+
+    let map = null;
+    let markers = {};
+    let currentPopup = null;
+
+    function initMap() {
+      if (map) return;
+      
+      map = L.map('map').setView([-34.4197, -58.8431], 13);
+      
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+
+      Object.entries(branchCoordinates).forEach(([key, coord]) => {
+        const marker = L.marker([coord.lat, coord.lng]).addTo(map);
+        marker.bindPopup(`<strong>${coord.name}</strong><br>${coord.address}`);
+        markers[key] = marker;
+        
+        marker.on('popupopen', () => {
+          currentPopup = key;
+        });
+        marker.on('popupclose', () => {
+          currentPopup = null;
+        });
+      });
+
+      showBranch('garin');
+    }
+
+    function showBranch(branch) {
+      if (!map) return;
+      
+      const coord = branchCoordinates[branch];
+      if (!coord) return;
+
+      if (currentPopup && markers[currentPopup]) {
+        markers[currentPopup].closePopup();
+      }
+
+      map.setView([coord.lat, coord.lng], 15, {
+        animate: true,
+        duration: 1
+      });
+
+      if (markers[branch]) {
+        markers[branch].openPopup();
+        currentPopup = branch;
+      }
+
+      document.querySelectorAll('.branch-card').forEach(card => {
+        card.classList.toggle('active', card.dataset.branch === branch);
+      });
+
+      document.querySelectorAll('.map-control-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.branch === branch);
+      });
+    }
+
+    document.querySelectorAll('.branch-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const branch = card.dataset.branch;
+        showBranch(branch);
+      });
+    });
+
+    document.querySelectorAll('.map-control-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const branch = btn.dataset.branch;
+        showBranch(branch);
+      });
+    });
+
+    const mapSection = document.querySelector('#sucursales');
+    let mapInitialized = false;
+
+    const mapObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !mapInitialized) {
+          mapInitialized = true;
+          setTimeout(initMap, 300);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    if (mapSection) mapObserver.observe(mapSection);
+
+    // ============================================
+    // 12. GEOLOCALIZACIÓN PARA SUCURSAL MÁS CERCANA
+    // ============================================
+    function calcularDistancia(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = 
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+        Math.sin(dLon/2) * Math.sin(dLon/2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      return R * c;
+    }
+
+    function encontrarSucursalCercana(lat, lon) {
+      let cercana = null;
+      let distanciaMinima = Infinity;
+
+      Object.entries(branchCoordinates).forEach(([key, coord]) => {
+        const distancia = calcularDistancia(lat, lon, coord.lat, coord.lng);
+        if (distancia < distanciaMinima) {
+          distanciaMinima = distancia;
+          cercana = key;
+        }
+      });
+
+      return { sucursal: cercana, distancia: distanciaMinima };
+    }
+
+    // Intentar obtener ubicación del usuario
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          const resultado = encontrarSucursalCercana(latitude, longitude);
+          
+          if (resultado.sucursal) {
+            // Resaltar la sucursal más cercana
+            document.querySelectorAll('.branch-card').forEach(card => {
+              card.classList.remove('active');
+              if (card.dataset.branch === resultado.sucursal) {
+                card.classList.add('active');
+                // Mostrar distancia en km
+                const distanceEl = card.querySelector('.distance');
+                if (distanceEl) {
+                  distanceEl.textContent = `📍 A ${resultado.distancia.toFixed(1)} km de tu ubicación`;
+                }
+              }
+            });
+
+            // Seleccionar en el formulario
+            const select = document.getElementById('branchSelect');
+            if (select) {
+              select.value = resultado.sucursal;
+            }
+
+            // Mostrar en el mapa
+            showBranch(resultado.sucursal);
+          }
+        },
+        (error) => {
+          console.log('No se pudo obtener ubicación:', error);
+        }
+      );
+    }
+
+    console.log('🐾 La Granja Veterinaria & PetShop - Versión Definitiva');
+    console.log('🛒 Carrito con agregar/comprar por WhatsApp');
+    console.log('📍 Geolocalización para encontrar la sucursal más cercana');
+    console.log('🎨 Diseño full responsive con logo real');
+    console.log('👨‍💻 Creado por CIBORG347');
+  </script>
+
+</body>
+</html>
