@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,700&display=swap" rel="stylesheet">
   
   <!-- Font Awesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -209,32 +210,42 @@
       transform: scale(1.05);
     }
 
-    .cart-icon {
+    .cart-icon-header {
       position: relative;
       cursor: pointer;
       font-size: 1.4rem;
       color: #2d3748;
-      transition: color 0.3s ease;
+      transition: all 0.3s ease;
+      padding: 6px 10px;
+      border-radius: 10px;
+      background: transparent;
     }
 
-    .cart-icon:hover {
-      color: #27ae60;
+    .cart-icon-header.has-items {
+      background: #27ae60;
+      color: white;
+      box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
     }
 
-    .cart-badge {
+    .cart-icon-header:hover {
+      transform: scale(1.05);
+    }
+
+    .cart-badge-header {
       position: absolute;
       top: -8px;
-      right: -10px;
+      right: -6px;
       background: #e67e22;
       color: white;
       border-radius: 50%;
-      width: 20px;
-      height: 20px;
+      width: 22px;
+      height: 22px;
       font-size: 0.7rem;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: 700;
+      border: 2px solid white;
     }
 
     .menu-toggle {
@@ -445,30 +456,167 @@
       box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
     }
 
+    /* ==================== MODAL PRODUCTO ==================== */
+    .product-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(8px);
+      z-index: 3000;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .product-modal-overlay.active {
+      display: flex;
+    }
+
+    .product-modal {
+      background: white;
+      border-radius: 24px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 2rem;
+      position: relative;
+      animation: modalSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes modalSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .product-modal-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #718096;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+
+    .product-modal-close:hover {
+      color: #e53e3e;
+      transform: rotate(90deg);
+    }
+
+    .product-modal-image {
+      width: 100%;
+      height: 300px;
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .product-modal-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .product-modal h3 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .product-modal .modal-category {
+      display: inline-block;
+      background: #e2e8f0;
+      padding: 4px 14px;
+      border-radius: 50px;
+      font-size: 0.8rem;
+      color: #4a5568;
+      margin-bottom: 0.8rem;
+    }
+
+    .product-modal .modal-price {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #27ae60;
+      margin-bottom: 1rem;
+    }
+
+    .product-modal .modal-description {
+      color: #4a5568;
+      line-height: 1.8;
+      margin-bottom: 1.5rem;
+    }
+
+    .product-modal .modal-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .product-modal .modal-actions .btn {
+      flex: 1;
+      justify-content: center;
+    }
+
     /* ==================== HERO ==================== */
     .hero {
       position: relative;
-      min-height: 100vh;
+      min-height: 80vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      background-image: url('https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-      background-size: cover;
-      background-position: center;
-      padding: 120px 0 60px;
+      padding: 100px 0 50px;
       margin-top: 0;
+      overflow: hidden;
     }
 
-    .hero-overlay {
+    .hero-slides {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(26, 32, 44, 0.65);
-      z-index: 1;
+      z-index: 0;
+    }
+
+    .hero-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+
+    .hero-slide.active {
+      opacity: 1;
+    }
+
+    .hero-slide::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(26, 32, 44, 0.55);
     }
 
     .hero-content {
@@ -479,26 +627,30 @@
       padding: 0 20px;
     }
 
-    .hero-logo {
-      max-width: 280px;
-      width: 100%;
-      margin: 0 auto 2rem;
-      display: block;
-      filter: drop-shadow(0 4px 20px rgba(0,0,0,0.3));
-    }
-
-    .hero-content h1 {
+    .hero-content .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
       color: white;
-      margin-bottom: 1.2rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+      line-height: 1.1;
     }
 
-    .hero-content p {
+    .hero-content .hero-title .highlight {
+      color: #f39c12;
+      font-style: italic;
+    }
+
+    .hero-content .hero-subtitle {
       font-size: 1.2rem;
-      color: rgba(255, 255, 255, 0.9);
+      color: rgba(255, 255, 255, 0.85);
       margin-bottom: 2rem;
       max-width: 600px;
       margin-left: auto;
       margin-right: auto;
+      font-weight: 300;
+      letter-spacing: 1px;
     }
 
     .hero-buttons {
@@ -506,6 +658,235 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 1rem;
+    }
+
+    .hero-dots {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 3;
+    }
+
+    .hero-dots .hero-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .hero-dots .hero-dot.active {
+      background: #27ae60;
+      border-color: white;
+      transform: scale(1.2);
+    }
+
+    .hero-dots .hero-dot:hover {
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .hero-cards {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .card-feature {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      padding: 1.2rem 1rem;
+      text-align: center;
+      color: white;
+      transition: all 0.3s ease;
+      cursor: default;
+    }
+
+    .card-feature:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-5px);
+    }
+
+    .card-feature i {
+      font-size: 2rem;
+      display: block;
+      margin-bottom: 6px;
+      color: #f39c12;
+    }
+
+    .card-feature span {
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    /* ==================== LOGO SECCIÓN ==================== */
+    .logo-section {
+      padding: 50px 0 40px;
+      text-align: center;
+      background: white;
+      border-bottom: 1px solid #f0f4f8;
+    }
+
+    .logo-section img {
+      max-width: 220px;
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .logo-section .logo-tagline {
+      font-size: 1.1rem;
+      color: #27ae60;
+      font-weight: 600;
+      margin-top: 10px;
+      letter-spacing: 2px;
+    }
+
+    /* ==================== BANNER SLIDER ==================== */
+    .banner-section {
+      padding: 30px 0;
+      background: #f8fafc;
+    }
+
+    .banner-slider {
+      position: relative;
+      width: 100%;
+      height: 320px;
+      overflow: hidden;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .banner-slider .slides {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .banner-slider .slide {
+      min-width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .banner-slider .slide .banner-content {
+      text-align: center;
+      color: white;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      border-radius: 16px;
+      max-width: 600px;
+      margin: 0 20px;
+    }
+
+    .banner-slider .slide .banner-content h3 {
+      color: white;
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .banner-slider .slide .banner-content p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+
+    .banner-slider .slide .banner-content .btn-banner {
+      display: inline-block;
+      padding: 12px 30px;
+      background: #27ae60;
+      color: white;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .banner-slider .slide .banner-content .btn-banner:hover {
+      background: #219a52;
+      transform: scale(1.05);
+    }
+
+    .banner-slider .dots {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 5;
+    }
+
+    .banner-slider .dots .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .banner-slider .dots .dot.active {
+      background: #27ae60;
+      border-color: white;
+      transform: scale(1.2);
+    }
+
+    .banner-slider .dots .dot:hover {
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    .banner-slider .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      color: white;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .banner-slider .slider-btn:hover {
+      background: rgba(255, 255, 255, 0.4);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .banner-slider .slider-btn.prev {
+      left: 10px;
+    }
+
+    .banner-slider .slider-btn.next {
+      right: 10px;
     }
 
     /* ==================== BOTONES ==================== */
@@ -544,18 +925,6 @@
     .btn-secondary:hover {
       background: rgba(255, 255, 255, 0.1);
       border-color: white;
-      transform: translateY(-2px);
-    }
-
-    .btn-outline {
-      background: transparent;
-      color: #27ae60;
-      border: 2px solid #27ae60;
-    }
-
-    .btn-outline:hover {
-      background: #27ae60;
-      color: white;
       transform: translateY(-2px);
     }
 
@@ -601,45 +970,26 @@
       transform: scale(1.05);
     }
 
-    /* ==================== HERO CARDS ==================== */
-    .hero-cards {
-      position: relative;
-      z-index: 2;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 1rem;
-      margin-top: 3rem;
-      width: 100%;
-      max-width: 900px;
-    }
-
-    .card-feature {
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 16px;
-      padding: 1.2rem 1rem;
-      text-align: center;
-      color: white;
+    .btn-view-product {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      color: #27ae60;
+      border: 2px solid #27ae60;
+      padding: 6px 14px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
       transition: all 0.3s ease;
-      cursor: default;
     }
 
-    .card-feature:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-5px);
-    }
-
-    .card-feature i {
-      font-size: 2rem;
-      display: block;
-      margin-bottom: 6px;
-      color: #f39c12;
-    }
-
-    .card-feature span {
-      font-weight: 500;
-      font-size: 0.95rem;
+    .btn-view-product:hover {
+      background: #27ae60;
+      color: white;
+      transform: scale(1.05);
     }
 
     /* ==================== SECCIONES ==================== */
@@ -733,6 +1083,46 @@
       transform: scale(1.02);
     }
 
+    /* ==================== BENEFICIOS PREMIUM ==================== */
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .benefit-card {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+      border: 1px solid #f0f4f8;
+      transition: all 0.3s ease;
+    }
+
+    .benefit-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+      border-color: #27ae60;
+    }
+
+    .benefit-card i {
+      font-size: 3rem;
+      color: #27ae60;
+      margin-bottom: 1rem;
+    }
+
+    .benefit-card h4 {
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+
+    .benefit-card p {
+      color: #718096;
+      font-size: 0.9rem;
+    }
+
     /* ==================== SUCURSALES ==================== */
     .branches-grid {
       display: grid;
@@ -805,7 +1195,7 @@
       border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-      height: 400px;
+      height: 300px;
       position: relative;
     }
 
@@ -823,12 +1213,12 @@
     }
 
     .map-control-btn {
-      padding: 8px 16px;
+      padding: 6px 14px;
       border: 2px solid #e2e8f0;
       border-radius: 50px;
       background: white;
       font-weight: 500;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: #4a5568;
       cursor: pointer;
       transition: all 0.3s ease;
@@ -845,9 +1235,9 @@
       border-color: #27ae60;
     }
 
-    /* ==================== ESTADÍSTICAS ==================== */
+    /* ==================== ESTADÍSTICAS MEJORADAS ==================== */
     .stats {
-      background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+      background: linear-gradient(135deg, #0d1b2a 0%, #1b2d45 100%);
       color: white;
       padding: 70px 0;
       position: relative;
@@ -861,7 +1251,7 @@
       right: -10%;
       width: 300px;
       height: 300px;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(46, 204, 113, 0.08);
       border-radius: 50%;
     }
 
@@ -872,7 +1262,7 @@
       left: -5%;
       width: 200px;
       height: 200px;
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(46, 204, 113, 0.05);
       border-radius: 50%;
     }
 
@@ -886,40 +1276,43 @@
     }
 
     .stats-grid div {
-      padding: 1.5rem;
-      background: rgba(255, 255, 255, 0.1);
+      padding: 1.8rem 1.5rem;
+      background: rgba(255, 255, 255, 0.05);
       border-radius: 20px;
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       transition: all 0.3s ease;
     }
 
     .stats-grid div:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
       transform: scale(1.03);
+      border-color: rgba(46, 204, 113, 0.3);
     }
 
     .stat-number {
-      font-size: 3.5rem;
+      font-size: 3.8rem;
       font-weight: 800;
       display: block;
       line-height: 1.2;
-      background: linear-gradient(135deg, #fff 0%, #f0fdf4 100%);
+      background: linear-gradient(135deg, #2ecc71 0%, #27ae60 50%, #f39c12 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      text-shadow: none;
     }
 
     .stats-grid p {
       font-size: 1.1rem;
-      opacity: 0.95;
+      opacity: 0.9;
       font-weight: 500;
       margin-top: 0.5rem;
-      color: white;
+      color: #e2e8f0;
+      letter-spacing: 0.5px;
     }
 
     .stats-grid .stat-icon {
-      font-size: 2.5rem;
+      font-size: 2.8rem;
       display: block;
       margin-bottom: 0.5rem;
       color: #f39c12;
@@ -993,11 +1386,36 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
       transition: all 0.3s ease;
       border: 1px solid rgba(0, 0, 0, 0.04);
+      position: relative;
     }
 
     .product-card:hover {
       transform: translateY(-6px);
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+    }
+
+    .product-card.in-cart {
+      border-color: #27ae60;
+      box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2);
+    }
+
+    .product-card .in-cart-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: #27ae60;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      display: none;
+      z-index: 5;
+      box-shadow: 0 2px 10px rgba(39, 174, 96, 0.3);
+    }
+
+    .product-card.in-cart .in-cart-badge {
+      display: block;
     }
 
     .product-image {
@@ -1007,12 +1425,18 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      cursor: pointer;
     }
 
     .product-image img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .product-card:hover .product-image img {
+      transform: scale(1.05);
     }
 
     .product-info {
@@ -1022,6 +1446,11 @@
     .product-info h4 {
       font-size: 1rem;
       margin-bottom: 4px;
+      cursor: pointer;
+    }
+
+    .product-info h4:hover {
+      color: #27ae60;
     }
 
     .product-info .category {
@@ -1049,7 +1478,7 @@
       justify-content: center;
     }
 
-    .product-actions .btn-whatsapp-query {
+    .product-actions .btn-view-product {
       flex: 1;
       justify-content: center;
     }
@@ -1057,7 +1486,7 @@
     /* ==================== MARCAS ==================== */
     .brands-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 1.5rem;
       text-align: center;
     }
@@ -1084,13 +1513,15 @@
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
     }
 
-    .brands-grid i {
-      font-size: 2.5rem;
-      color: #27ae60;
+    .brands-grid img {
+      max-width: 120px;
+      height: 50px;
+      object-fit: contain;
     }
 
     .brands-grid span {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      margin-top: 4px;
     }
 
     /* ==================== MEDIOS DE PAGO ==================== */
@@ -1282,6 +1713,70 @@
       line-height: 1.7;
     }
 
+    /* ==================== NEWSLETTER ==================== */
+    .newsletter-section {
+      background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+      color: white;
+      padding: 60px 0;
+      text-align: center;
+    }
+
+    .newsletter-section h2 {
+      color: white;
+    }
+
+    .newsletter-section p {
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 500px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .newsletter-form {
+      display: flex;
+      max-width: 500px;
+      margin: 0 auto;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .newsletter-form input {
+      flex: 1;
+      padding: 14px 20px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.05);
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+      min-width: 200px;
+    }
+
+    .newsletter-form input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .newsletter-form input:focus {
+      border-color: #27ae60;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .newsletter-form button {
+      padding: 14px 32px;
+      border-radius: 50px;
+      background: #27ae60;
+      color: white;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .newsletter-form button:hover {
+      background: #219a52;
+      transform: translateY(-2px);
+    }
+
     /* ==================== CONTACTO ==================== */
     .contact-grid {
       display: grid;
@@ -1471,42 +1966,55 @@
       box-shadow: 0 10px 35px rgba(37, 211, 102, 0.5);
     }
 
-    .back-to-top {
+    /* ==================== CARRITO FLOTANTE ==================== */
+    .cart-float {
       position: fixed;
       bottom: 100px;
       right: 30px;
-      width: 50px;
-      height: 50px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       background: #27ae60;
       color: white;
       border: none;
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(39, 174, 96, 0.3);
+      box-shadow: 0 4px 20px rgba(39, 174, 96, 0.35);
       z-index: 999;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: all 0.3s ease;
     }
 
-    .back-to-top.visible {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .back-to-top:hover {
+    .cart-float:hover {
       background: #219a52;
-      transform: translateY(-4px);
+      transform: scale(1.08) translateY(-3px);
+      box-shadow: 0 8px 30px rgba(39, 174, 96, 0.45);
+    }
+
+    .cart-float .float-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #e67e22;
+      color: white;
+      border-radius: 50%;
+      min-width: 24px;
+      height: 24px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      border: 2px solid white;
+      padding: 0 4px;
     }
 
     /* ==================== NOTIFICACIONES ==================== */
     .notification {
       position: fixed;
-      bottom: 100px;
+      bottom: 170px;
       right: 30px;
       background: #27ae60;
       color: white;
@@ -1515,12 +2023,16 @@
       box-shadow: 0 4px 20px rgba(39, 174, 96, 0.3);
       z-index: 3000;
       transform: translateX(120%);
-      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       font-weight: 500;
+      opacity: 0;
+      visibility: hidden;
     }
 
     .notification.show {
       transform: translateX(0);
+      opacity: 1;
+      visibility: visible;
     }
 
     /* ==================== RESPONSIVE ==================== */
@@ -1583,12 +2095,8 @@
       }
       
       .hero {
-        min-height: 90vh;
-        padding: 100px 0 40px;
-      }
-      
-      .hero-logo {
-        max-width: 200px;
+        min-height: 70vh;
+        padding: 80px 0 30px;
       }
       
       .hero-cards {
@@ -1650,6 +2158,71 @@
       .logo-text .sub {
         font-size: 0.5rem;
       }
+      
+      .benefits-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+      
+      .product-modal {
+        padding: 1.5rem;
+      }
+      
+      .product-modal-image {
+        height: 200px;
+      }
+      
+      .banner-slider {
+        height: 220px;
+      }
+      
+      .banner-slider .slide .banner-content h3 {
+        font-size: 1.4rem;
+      }
+      
+      .banner-slider .slide .banner-content p {
+        font-size: 0.9rem;
+      }
+      
+      .banner-slider .slider-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+      }
+      
+      .logo-section img {
+        max-width: 160px;
+      }
+      
+      .hero-content .hero-title {
+        font-size: clamp(2.2rem, 5vw, 3.2rem);
+      }
+      
+      .whatsapp-float {
+        width: 50px;
+        height: 50px;
+        font-size: 1.6rem;
+        bottom: 25px;
+        right: 20px;
+      }
+      
+      .cart-float {
+        bottom: 90px;
+        right: 20px;
+        width: 48px;
+        height: 48px;
+        font-size: 1.3rem;
+      }
+      
+      .notification {
+        bottom: 150px;
+        right: 20px;
+        font-size: 0.85rem;
+        padding: 10px 16px;
+      }
+      
+      .stat-number {
+        font-size: 2.8rem;
+      }
     }
 
     @media (max-width: 480px) {
@@ -1660,10 +2233,6 @@
       
       .hero-cards {
         grid-template-columns: 1fr 1fr;
-      }
-      
-      .hero-logo {
-        max-width: 160px;
       }
       
       .card-feature {
@@ -1696,7 +2265,7 @@
       }
       
       .product-actions .btn-add-cart,
-      .product-actions .btn-whatsapp-query {
+      .product-actions .btn-view-product {
         width: 100%;
         justify-content: center;
       }
@@ -1719,7 +2288,86 @@
       }
       
       .map-container {
-        height: 250px;
+        height: 200px;
+      }
+      
+      .benefits-grid {
+        grid-template-columns: 1fr;
+        max-width: 320px;
+        margin: 0 auto;
+      }
+      
+      .product-modal .modal-actions {
+        flex-direction: column;
+      }
+      
+      .banner-slider {
+        height: 180px;
+      }
+      
+      .banner-slider .slide .banner-content {
+        padding: 1rem;
+      }
+      
+      .banner-slider .slide .banner-content h3 {
+        font-size: 1.1rem;
+      }
+      
+      .banner-slider .slider-btn {
+        display: none;
+      }
+      
+      .logo-section img {
+        max-width: 130px;
+      }
+      
+      .brands-grid img {
+        max-width: 80px;
+        height: 35px;
+      }
+      
+      .hero-content .hero-title {
+        font-size: clamp(1.8rem, 4vw, 2.5rem);
+      }
+      
+      .hero-dots .hero-dot {
+        width: 8px;
+        height: 8px;
+      }
+      
+      .whatsapp-float {
+        width: 44px;
+        height: 44px;
+        font-size: 1.4rem;
+        bottom: 20px;
+        right: 15px;
+      }
+      
+      .cart-float {
+        bottom: 80px;
+        right: 15px;
+        width: 44px;
+        height: 44px;
+        font-size: 1.2rem;
+      }
+      
+      .cart-float .float-badge {
+        min-width: 20px;
+        height: 20px;
+        font-size: 0.6rem;
+        top: -6px;
+        right: -6px;
+      }
+      
+      .notification {
+        bottom: 140px;
+        right: 15px;
+        font-size: 0.8rem;
+        padding: 8px 14px;
+      }
+      
+      .stat-number {
+        font-size: 2.2rem;
       }
     }
 
@@ -1759,9 +2407,9 @@
         <a href="https://wa.me/5491123456789" target="_blank" class="btn-whatsapp-nav">
           <i class="fab fa-whatsapp"></i> WhatsApp
         </a>
-        <div class="cart-icon" id="cartIcon">
+        <div class="cart-icon-header" id="cartIconHeader">
           <i class="fas fa-shopping-cart"></i>
-          <span class="cart-badge" id="cartBadge">0</span>
+          <span class="cart-badge-header" id="cartBadgeHeader">0</span>
         </div>
       </nav>
       <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
@@ -1796,26 +2444,118 @@
     </div>
   </div>
 
+  <!-- ==================== MODAL PRODUCTO ==================== -->
+  <div class="product-modal-overlay" id="productModal">
+    <div class="product-modal">
+      <button class="product-modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+      <div class="product-modal-image" id="modalImage">
+        <img src="" alt="Producto">
+      </div>
+      <h3 id="modalName">Nombre del producto</h3>
+      <span class="modal-category" id="modalCategory">Categoría</span>
+      <div class="modal-price" id="modalPrice">$0</div>
+      <div class="modal-description" id="modalDescription">
+        Descripción detallada del producto. Ideal para mascotas de todas las edades.
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" id="modalAddCart">
+          <i class="fas fa-cart-plus"></i> Agregar al carrito
+        </button>
+        <a href="#" class="btn btn-whatsapp-query" id="modalWhatsapp" target="_blank">
+          <i class="fab fa-whatsapp"></i> Consultar
+        </a>
+      </div>
+    </div>
+  </div>
+
   <!-- ==================== NOTIFICACIÓN ==================== -->
   <div class="notification" id="notification">✅ Producto agregado al carrito</div>
 
+  <!-- ==================== CARRITO FLOTANTE ==================== -->
+  <button class="cart-float" id="cartFloat">
+    <i class="fas fa-shopping-cart"></i>
+    <span class="float-badge" id="cartFloatBadge">0</span>
+  </button>
+
   <!-- ==================== HERO ==================== -->
   <section id="inicio" class="hero">
-    <div class="hero-overlay"></div>
-    <div class="container hero-content">
-      <img src="https://fhxcumwhgtfirznnznjx.supabase.co/storage/v1/object/public/IMAGEN%20VETERINARIA/ChatGPT%20Image%207%20jul%202026,%2005_44_46%20p.m..png" alt="La Granja Veterinaria" class="hero-logo" loading="lazy">
-      <h1>Cuidado y amor para tu mejor amigo</h1>
-      <p>Clínica, peluquería, pet shop y envíos. Todo lo que tu mascota necesita en un solo lugar.</p>
+    <div class="hero-slides" id="heroSlides">
+      <div class="hero-slide active" style="background-image: url('https://iili.io/Clgx4N1.md.jpg');"></div>
+      <div class="hero-slide" style="background-image: url('https://iili.io/ClgAl3J.md.jpg');"></div>
+      <div class="hero-slide" style="background-image: url('https://iili.io/ClgAa4a.md.jpg');"></div>
+      <div class="hero-slide" style="background-image: url('https://iili.io/ClgAYEg.md.jpg');"></div>
+    </div>
+
+    <div class="hero-content">
+      <h1 class="hero-title">
+        <span class="highlight">La Granja</span><br>
+        Veterinaria & PetShop
+      </h1>
+      <p class="hero-subtitle">Cuidado profesional y productos de calidad para tu mascota</p>
       <div class="hero-buttons">
         <a href="#contacto" class="btn btn-primary">Agendar consulta</a>
         <a href="#petshop" class="btn btn-secondary">Ver productos</a>
       </div>
     </div>
+
+    <div class="hero-dots" id="heroDots">
+      <span class="hero-dot active" data-index="0"></span>
+      <span class="hero-dot" data-index="1"></span>
+      <span class="hero-dot" data-index="2"></span>
+      <span class="hero-dot" data-index="3"></span>
+    </div>
+
     <div class="container hero-cards">
       <div class="card-feature"><i class="fas fa-stethoscope"></i><span>Clínica</span></div>
       <div class="card-feature"><i class="fas fa-cut"></i><span>Peluquería</span></div>
       <div class="card-feature"><i class="fas fa-store"></i><span>PetShop</span></div>
       <div class="card-feature"><i class="fas fa-truck"></i><span>Envíos</span></div>
+    </div>
+  </section>
+
+  <!-- ==================== LOGO SECCIÓN ==================== -->
+  <div class="logo-section">
+    <div class="container">
+      <img src="https://fhxcumwhgtfirznnznjx.supabase.co/storage/v1/object/public/IMAGEN%20VETERINARIA/ChatGPT%20Image%207%20jul%202026,%2005_44_46%20p.m..png" alt="La Granja Veterinaria" loading="lazy">
+      <div class="logo-tagline">❤️ Excelencia en cuidado animal</div>
+    </div>
+  </div>
+
+  <!-- ==================== BANNER DE PROMOCIONES ==================== -->
+  <section class="banner-section">
+    <div class="container">
+      <div class="banner-slider" id="bannerSlider">
+        <div class="slides" id="bannerSlides">
+          <div class="slide" style="background-image: url('https://iili.io/ClgA1vR.md.jpg');">
+            <div class="banner-content">
+              <h3>🐾 15% OFF en alimentos</h3>
+              <p>Válido hasta el 31 de julio en todas las marcas</p>
+              <a href="#petshop" class="btn-banner">Ver promociones</a>
+            </div>
+          </div>
+          <div class="slide" style="background-image: url('https://iili.io/ClgAEpp.webp');">
+            <div class="banner-content">
+              <h3>💉 Consulta gratuita</h3>
+              <p>Primera consulta sin cargo con tu registro</p>
+              <a href="#contacto" class="btn-banner">Agendar ahora</a>
+            </div>
+          </div>
+          <div class="slide" style="background-image: url('https://iili.io/ClgAMTN.md.jpg');">
+            <div class="banner-content">
+              <h3>🎁 Llevá 3 pagá 2</h3>
+              <p>En accesorios seleccionados. Promoción por tiempo limitado</p>
+              <a href="#petshop" class="btn-banner">Comprar ahora</a>
+            </div>
+          </div>
+        </div>
+        <button class="slider-btn prev" id="bannerPrev"><i class="fas fa-chevron-left"></i></button>
+        <button class="slider-btn next" id="bannerNext"><i class="fas fa-chevron-right"></i></button>
+        <div class="dots" id="bannerDots">
+          <span class="dot active" data-index="0"></span>
+          <span class="dot" data-index="1"></span>
+          <span class="dot" data-index="2"></span>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1873,7 +2613,37 @@
         </ul>
       </div>
       <div class="about-image">
-        <img src="https://images.unsplash.com/photo-1582562124811-c09040d0a901?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Veterinaria La Granja" loading="lazy">
+        <img src="https://iili.io/ClgAVjI.md.jpg" alt="Equipo de veterinarios profesionales" loading="lazy">
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== BENEFICIOS PREMIUM ==================== -->
+  <section class="section" style="background: #f8fafc;">
+    <div class="container">
+      <h2 class="section-title">¿Por qué elegirnos?</h2>
+      <p class="section-subtitle">Más de 15 años cuidando a tus mascotas con excelencia</p>
+      <div class="benefits-grid">
+        <div class="benefit-card">
+          <i class="fas fa-award"></i>
+          <h4>Excelencia profesional</h4>
+          <p>Equipo certificado con años de experiencia</p>
+        </div>
+        <div class="benefit-card">
+          <i class="fas fa-heart"></i>
+          <h4>Atención personalizada</h4>
+          <p>Trato cálido y dedicado para cada mascota</p>
+        </div>
+        <div class="benefit-card">
+          <i class="fas fa-clock"></i>
+          <h4>Urgencias 24h</h4>
+          <p>Atención inmediata todos los días del año</p>
+        </div>
+        <div class="benefit-card">
+          <i class="fas fa-store-alt"></i>
+          <h4>6 sucursales</h4>
+          <p>La mejor cobertura en zona norte</p>
+        </div>
       </div>
     </div>
   </section>
@@ -1883,13 +2653,25 @@
     <div class="container">
       <h2 class="section-title">Nuestras sucursales</h2>
       <p class="section-subtitle">Encontrá la sucursal más cercana a tu hogar</p>
+      
+      <div style="text-align: center; background: white; padding: 1.5rem; border-radius: 16px; margin-bottom: 2rem; border: 2px solid #27ae60; box-shadow: 0 4px 20px rgba(39,174,96,0.1);">
+        <p style="font-size: 1.2rem; font-weight: 700; color: #1a202c;">
+          <i class="fas fa-star" style="color: #f39c12;"></i>
+          Sucursal Central
+          <i class="fas fa-star" style="color: #f39c12;"></i>
+        </p>
+        <p style="color: #27ae60; font-weight: 600; font-size: 1.1rem;">
+          <i class="fas fa-map-pin"></i> Cigliutti 201, Garín CP 1619
+        </p>
+      </div>
+
       <div class="branches-grid" id="branchesGrid">
         <div class="branch-card active" data-branch="garin">
           <i class="fas fa-store"></i>
           <div class="branch-info">
             <h4>Garín</h4>
             <p>Cigliutti 201</p>
-            <span class="badge">Atención 24h</span>
+            <span class="badge">📍 Central</span>
             <span class="distance" id="dist-garin">📍 Cerca de vos</span>
           </div>
         </div>
@@ -1953,7 +2735,7 @@
     </div>
   </section>
 
-  <!-- ==================== ESTADÍSTICAS ==================== -->
+  <!-- ==================== ESTADÍSTICAS MEJORADAS ==================== -->
   <section class="section stats">
     <div class="container stats-grid">
       <div>
@@ -2003,13 +2785,34 @@
       <h2 class="section-title">Marcas aliadas</h2>
       <p class="section-subtitle">Trabajamos con las mejores marcas del mercado</p>
       <div class="brands-grid">
-        <div><i class="fas fa-dog"></i><span>Royal Canin</span></div>
-        <div><i class="fas fa-dog"></i><span>Pro Plan</span></div>
-        <div><i class="fas fa-dog"></i><span>Purina</span></div>
-        <div><i class="fas fa-dog"></i><span>Vitalcan</span></div>
-        <div><i class="fas fa-dog"></i><span>Excellent</span></div>
-        <div><i class="fas fa-dog"></i><span>Pedigree</span></div>
-        <div><i class="fas fa-dog"></i><span>Whiskas</span></div>
+        <div>
+          <img src="https://fhxcumwhgtfirznnznjx.supabase.co/storage/v1/object/public/IMAGEN%20VETERINARIA/6027f9eaed4efb0004199870.png" alt="Royal Canin" loading="lazy">
+          <span>Royal Canin</span>
+        </div>
+        <div>
+          <img src="https://fhxcumwhgtfirznnznjx.supabase.co/storage/v1/object/public/IMAGEN%20VETERINARIA/6027f9eaed4efb0004199870.png" alt="Pro Plan" loading="lazy">
+          <span>Pro Plan</span>
+        </div>
+        <div>
+          <img src="https://fhxcumwhgtfirznnznjx.supabase.co/storage/v1/object/public/IMAGEN%20VETERINARIA/5ae22df933b73fa43b1a8946.png" alt="Purina" loading="lazy">
+          <span>Purina</span>
+        </div>
+        <div>
+          <img src="https://fhxcumwhgtfirznnznjx.supabase.co/storage/v1/object/public/IMAGEN%20VETERINARIA/cliente-vitalcan.png" alt="Vitalcan" loading="lazy">
+          <span>Vitalcan</span>
+        </div>
+        <div>
+          <img src="https://fhxcumwhgtfirznnznjx.supabase.co/storage/v1/object/public/IMAGEN%20VETERINARIA/excelent.webp" alt="Excellent" loading="lazy">
+          <span>Excellent</span>
+        </div>
+        <div>
+          <img src="https://fhxcumwhgtfirznnznjx.supabase.co/storage/v1/object/public/IMAGEN%20VETERINARIA/Pedigree-logo-1536x864%20(1).png" alt="Pedigree" loading="lazy">
+          <span>Pedigree</span>
+        </div>
+        <div>
+          <img src="https://fhxcumwhgtfirznnznjx.supabase.co/storage/v1/object/public/IMAGEN%20VETERINARIA/whiskas.svg" alt="Whiskas" loading="lazy">
+          <span>Whiskas</span>
+        </div>
       </div>
     </div>
   </section>
@@ -2063,7 +2866,20 @@
     <div class="container">
       <h2 class="section-title">Galería</h2>
       <p class="section-subtitle">Conocé nuestras instalaciones y el cuidado que brindamos</p>
-      <div class="gallery-grid" id="galleryGrid"></div>
+      <div class="gallery-grid" id="galleryGrid">
+        <div class="gallery-item"><img src="https://iili.io/Clgx4N1.md.jpg" alt="Mascota feliz" loading="lazy"></div>
+        <div class="gallery-item"><img src="https://iili.io/ClgAl3J.md.jpg" alt="Perro y dueño" loading="lazy"></div>
+        <div class="gallery-item"><img src="https://iili.io/ClgAa4a.md.jpg" alt="Mascota contenta" loading="lazy"></div>
+        <div class="gallery-item"><img src="https://iili.io/ClgAYEg.md.jpg" alt="Dueño con mascota" loading="lazy"></div>
+        <div class="gallery-item"><img src="https://iili.io/ClgA1vR.md.jpg" alt="Animal feliz" loading="lazy"></div>
+        <div class="gallery-item"><img src="https://iili.io/ClgAEpp.webp" alt="Mascota y dueño" loading="lazy"></div>
+        <div class="gallery-item"><img src="https://iili.io/ClgAMTN.md.jpg" alt="Perro contento" loading="lazy"></div>
+        <div class="gallery-item"><img src="https://iili.io/ClgAVjI.md.jpg" alt="Dueño con mascota" loading="lazy"></div>
+        <div class="gallery-item"><img src="https://iili.io/Clgx4N1.md.jpg" alt="Mascota feliz" loading="lazy"></div>
+        <div class="gallery-item"><img src="https://iili.io/ClgAl3J.md.jpg" alt="Perro y dueño" loading="lazy"></div>
+        <div class="gallery-item"><img src="https://iili.io/ClgAa4a.md.jpg" alt="Mascota contenta" loading="lazy"></div>
+        <div class="gallery-item"><img src="https://iili.io/ClgAYEg.md.jpg" alt="Dueño con mascota" loading="lazy"></div>
+      </div>
     </div>
   </section>
 
@@ -2126,16 +2942,31 @@
     </div>
   </section>
 
+  <!-- ==================== NEWSLETTER ==================== -->
+  <section class="newsletter-section">
+    <div class="container">
+      <h2>📬 Suscribite a nuestro newsletter</h2>
+      <p>Recibí novedades, promociones y consejos para el cuidado de tu mascota</p>
+      <form class="newsletter-form" id="newsletterForm">
+        <input type="email" placeholder="Tu correo electrónico" required>
+        <button type="submit">Suscribirme</button>
+      </form>
+    </div>
+  </section>
+
   <!-- ==================== CONTACTO ==================== -->
   <section id="contacto" class="section contact">
     <div class="container">
       <h2 class="section-title">Contacto</h2>
       <div class="contact-grid">
         <div class="contact-info">
-          <p><i class="fas fa-map-pin"></i> Sucursal Central: Av. Libertador 1234, CABA</p>
+          <p><i class="fas fa-map-pin"></i> Cigliutti 201, Garín CP 1619</p>
           <p><i class="fas fa-phone"></i> +54 11 2345-6789</p>
           <p><i class="fab fa-whatsapp"></i> +54 9 11 2345-6789</p>
           <p><i class="fas fa-envelope"></i> info@lagranjavet.com</p>
+          <p style="margin-top: 1rem; font-size: 0.9rem; color: #718096;">
+            <i class="fas fa-clock"></i> Lun a Sáb: 8:00 - 20:00
+          </p>
         </div>
         <form class="contact-form" id="contactForm">
           <input type="text" placeholder="Nombre completo" required>
@@ -2143,7 +2974,7 @@
           <input type="tel" placeholder="Teléfono">
           <select id="branchSelect">
             <option value="">¿Qué sucursal te queda más cerca?</option>
-            <option value="garin">Garín - Cigliutti 201</option>
+            <option value="garin">Garín - Cigliutti 201 (Central)</option>
             <option value="benavidez">Benavídez - Belgrano 2620</option>
             <option value="tortuguitas">Tortuguitas - Av. Constituyentes y Panamericana</option>
             <option value="escobar">Escobar - Av. 25 de Mayo 1301</option>
@@ -2172,6 +3003,9 @@
         <div style="margin-top: 1rem;">
           <p style="font-size: 0.8rem; opacity: 0.7;">
             <i class="fas fa-store"></i> 6 sucursales en zona norte
+          </p>
+          <p style="font-size: 0.8rem; opacity: 0.7;">
+            <i class="fas fa-map-pin"></i> Central: Cigliutti 201, Garín
           </p>
         </div>
       </div>
@@ -2222,9 +3056,7 @@
     </div>
   </footer>
 
-  <!-- Botón Volver Arriba -->
-  <button id="backToTop" class="back-to-top"><i class="fas fa-arrow-up"></i></button>
-  <!-- WhatsApp Flotante -->
+  <!-- ==================== BOTÓN WHATSAPP FLOTANTE ==================== -->
   <a href="https://wa.me/5491123456789" target="_blank" class="whatsapp-float">
     <i class="fab fa-whatsapp"></i>
   </a>
@@ -2273,99 +3105,31 @@
     });
 
     // ============================================
-    // 3. BOTÓN VOLVER ARRIBA
+    // 3. CARRITO FLOTANTE Y FUNCIONALIDAD
     // ============================================
-    const backToTop = document.getElementById('backToTop');
-
-    window.addEventListener('scroll', () => {
-      if (window.pageYOffset > 400) {
-        backToTop.classList.add('visible');
-      } else {
-        backToTop.classList.remove('visible');
-      }
-    });
-
-    backToTop.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    // ============================================
-    // 4. ANIMACIÓN DE CONTADORES
-    // ============================================
-    const statNumbers = document.querySelectorAll('.stat-number');
-
-    function animateCounter(el) {
-      const target = parseInt(el.getAttribute('data-count'));
-      const duration = 2000;
-      const startTime = performance.now();
-      
-      function updateCounter(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 4);
-        const current = Math.floor(eased * target);
-        el.textContent = current.toLocaleString();
-        
-        if (progress < 1) {
-          requestAnimationFrame(updateCounter);
-        } else {
-          el.textContent = target.toLocaleString();
-        }
-      }
-      
-      requestAnimationFrame(updateCounter);
-    }
-
-    const statsSection = document.querySelector('.stats');
-    let countersAnimated = false;
-
-    const statsObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting && !countersAnimated) {
-          countersAnimated = true;
-          statNumbers.forEach(stat => animateCounter(stat));
-        }
-      });
-    }, { threshold: 0.3 });
-
-    if (statsSection) statsObserver.observe(statsSection);
-
-    // ============================================
-    // 5. ANIMACIONES SCROLL
-    // ============================================
-    const revealElements = document.querySelectorAll('.card-service, .about-grid, .testimonial-card, .brands-grid div, .gallery-item, .contact-grid, .payment-item, .branch-card');
-
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
-
-    revealElements.forEach(el => {
-      el.classList.add('reveal');
-      revealObserver.observe(el);
-    });
-
-    // ============================================
-    // 6. CARRITO DE COMPRAS
-    // ============================================
-    let cart = [];
-    const cartIcon = document.getElementById('cartIcon');
+    const cartFloat = document.getElementById('cartFloat');
+    const cartFloatBadge = document.getElementById('cartFloatBadge');
     const cartSidebar = document.getElementById('cartSidebar');
     const cartOverlay = document.getElementById('cartOverlay');
     const cartClose = document.getElementById('cartClose');
-    const cartBody = document.getElementById('cartBody');
+    const cartIconHeader = document.getElementById('cartIconHeader');
+    const cartBadgeHeader = document.getElementById('cartBadgeHeader');
     const cartItems = document.getElementById('cartItems');
     const cartFooter = document.getElementById('cartFooter');
     const cartTotal = document.getElementById('cartTotal');
-    const cartBadge = document.getElementById('cartBadge');
     const notification = document.getElementById('notification');
+    let cart = [];
     let notificationTimeout;
 
-    // Abrir carrito
-    cartIcon.addEventListener('click', () => {
+    // Abrir carrito desde el botón flotante
+    cartFloat.addEventListener('click', () => {
+      cartSidebar.classList.add('open');
+      cartOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+
+    // Abrir carrito desde el header
+    cartIconHeader.addEventListener('click', () => {
       cartSidebar.classList.add('open');
       cartOverlay.classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -2425,7 +3189,25 @@
     // Actualizar carrito
     function updateCart() {
       const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-      cartBadge.textContent = totalItems;
+      
+      // Actualizar badges (header y flotante)
+      const badgeText = totalItems > 9 ? '10+' : totalItems;
+      cartBadgeHeader.textContent = badgeText;
+      cartFloatBadge.textContent = badgeText;
+
+      // Cambiar color del ícono del carrito en header
+      if (totalItems > 0) {
+        cartIconHeader.classList.add('has-items');
+      } else {
+        cartIconHeader.classList.remove('has-items');
+      }
+
+      // Actualizar badges en productos
+      document.querySelectorAll('.product-card').forEach(card => {
+        const id = parseInt(card.dataset.productId);
+        const inCart = cart.some(item => item.id === id);
+        card.classList.toggle('in-cart', inCart);
+      });
 
       const cartEmpty = document.querySelector('.cart-empty');
       if (cart.length === 0) {
@@ -2461,14 +3243,14 @@
       }
     }
 
-    // Mostrar notificación
+    // Mostrar notificación (desaparece después de 2.5 segundos)
     function showNotification(message) {
       notification.textContent = message;
       notification.classList.add('show');
       clearTimeout(notificationTimeout);
       notificationTimeout = setTimeout(() => {
         notification.classList.remove('show');
-      }, 3000);
+      }, 2500);
     }
 
     // Finalizar compra
@@ -2487,33 +3269,151 @@
     });
 
     // ============================================
-    // 7. CATÁLOGO DE PRODUCTOS
+    // 4. ANIMACIÓN DE CONTADORES
     // ============================================
+    const statNumbers = document.querySelectorAll('.stat-number');
+
+    function animateCounter(el) {
+      const target = parseInt(el.getAttribute('data-count'));
+      const duration = 2000;
+      const startTime = performance.now();
+      
+      function updateCounter(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 4);
+        const current = Math.floor(eased * target);
+        el.textContent = current.toLocaleString();
+        
+        if (progress < 1) {
+          requestAnimationFrame(updateCounter);
+        } else {
+          el.textContent = target.toLocaleString();
+        }
+      }
+      
+      requestAnimationFrame(updateCounter);
+    }
+
+    const statsSection = document.querySelector('.stats');
+    let countersAnimated = false;
+
+    const statsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && !countersAnimated) {
+          countersAnimated = true;
+          statNumbers.forEach(stat => animateCounter(stat));
+        }
+      });
+    }, { threshold: 0.3 });
+
+    if (statsSection) statsObserver.observe(statsSection);
+
+    // ============================================
+    // 5. ANIMACIONES SCROLL
+    // ============================================
+    const revealElements = document.querySelectorAll('.card-service, .about-grid, .testimonial-card, .brands-grid div, .gallery-item, .contact-grid, .payment-item, .branch-card, .benefit-card');
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+
+    revealElements.forEach(el => {
+      el.classList.add('reveal');
+      revealObserver.observe(el);
+    });
+
+    // ============================================
+    // 6. MODAL DE PRODUCTO
+    // ============================================
+    const productModal = document.getElementById('productModal');
+    const modalClose = document.getElementById('modalClose');
+    const modalImage = document.getElementById('modalImage').querySelector('img');
+    const modalName = document.getElementById('modalName');
+    const modalCategory = document.getElementById('modalCategory');
+    const modalPrice = document.getElementById('modalPrice');
+    const modalDescription = document.getElementById('modalDescription');
+    const modalAddCart = document.getElementById('modalAddCart');
+    const modalWhatsapp = document.getElementById('modalWhatsapp');
+    let currentModalProduct = null;
+
+    function openModal(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+
+      currentModalProduct = product;
+      modalImage.src = product.img;
+      modalImage.alt = product.name;
+      modalName.textContent = product.name;
+      modalCategory.textContent = product.category;
+      modalPrice.textContent = `$${product.price.toLocaleString()}`;
+      modalDescription.textContent = product.description || 'Producto de alta calidad para el cuidado de tu mascota. Ideal para todas las edades y razas.';
+      modalWhatsapp.href = `https://wa.me/5491123456789?text=Hola!%20Quiero%20consultar%20por%20${encodeURIComponent(product.name)}`;
+      
+      productModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      productModal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    productModal.addEventListener('click', (e) => {
+      if (e.target === productModal) closeModal();
+    });
+
+    modalAddCart.addEventListener('click', () => {
+      if (currentModalProduct) {
+        addToCart(currentModalProduct.id);
+        closeModal();
+      }
+    });
+
+    // ============================================
+    // 7. CATÁLOGO DE PRODUCTOS (NUEVAS IMÁGENES)
+    // ============================================
+    const productImages = [
+      'https://iili.io/ClgGNkX.jpg',
+      'https://iili.io/ClgGw7t.jpg',
+      'https://iili.io/ClgGXrN.jpg',
+      'https://iili.io/ClgGj2I.jpg',
+      'https://iili.io/ClgGOpn.jpg',
+      'https://iili.io/ClgWfgp.jpg',
+      'https://iili.io/ClgWBdN.jpg',
+      'https://iili.io/ClgGkIs.webp'
+    ];
+
     const products = [
-      { id: 1, name: 'Royal Canin Adulto', category: 'alimento', price: 12500, img: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 2, name: 'Pro Plan OptiHealth', category: 'alimento', price: 14200, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 3, name: 'Purina Excellent', category: 'alimento', price: 9800, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 4, name: 'Vitalcan Cordero', category: 'alimento', price: 11300, img: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 5, name: 'Pedigree Adulto', category: 'alimento', price: 7600, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 6, name: 'Whiskas Pescado', category: 'alimento', price: 6900, img: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 7, name: 'Correa reflectante', category: 'accesorio', price: 4200, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 8, name: 'Cama ortopédica', category: 'accesorio', price: 18500, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 9, name: 'Juguete cuerda', category: 'accesorio', price: 3800, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 10, name: 'Bebedero automático', category: 'accesorio', price: 8900, img: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 11, name: 'Arnés de seguridad', category: 'accesorio', price: 6400, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 12, name: 'Rascador para gatos', category: 'accesorio', price: 15200, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 13, name: 'Shampoo antipulgas', category: 'higiene', price: 5300, img: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 14, name: 'Cepillo desenredante', category: 'higiene', price: 2900, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 15, name: 'Cortaúñas profesional', category: 'higiene', price: 4700, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 16, name: 'Limpieza de oídos', category: 'higiene', price: 3400, img: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 17, name: 'Pasta dental canina', category: 'higiene', price: 4100, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 18, name: 'Toallitas húmedas', category: 'higiene', price: 2600, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 19, name: 'Alimento para cachorros', category: 'alimento', price: 10800, img: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 20, name: 'Alimento senior', category: 'alimento', price: 11900, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 21, name: 'Transportín plegable', category: 'accesorio', price: 22300, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 22, name: 'Bola dispensadora', category: 'accesorio', price: 5600, img: 'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 23, name: 'Repelente de pulgas', category: 'higiene', price: 7200, img: 'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
-      { id: 24, name: 'Acondicionador de pelo', category: 'higiene', price: 4800, img: 'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80' },
+      { id: 1, name: 'Royal Canin Adulto', category: 'alimento', price: 12500, img: productImages[0], description: 'Alimento balanceado para perros adultos de raza mediana. Fórmula optimizada con proteínas de alta calidad.' },
+      { id: 2, name: 'Pro Plan OptiHealth', category: 'alimento', price: 14200, img: productImages[1], description: 'Nutrición avanzada para perros adultos. Contiene antioxidantes naturales y probióticos.' },
+      { id: 3, name: 'Purina Excellent', category: 'alimento', price: 9800, img: productImages[2], description: 'Alimento premium con ingredientes naturales seleccionados para perros activos.' },
+      { id: 4, name: 'Vitalcan Cordero', category: 'alimento', price: 11300, img: productImages[3], description: 'Fórmula hipoalergénica con cordero y arroz. Alta digestibilidad y sabor irresistible.' },
+      { id: 5, name: 'Pedigree Adulto', category: 'alimento', price: 7600, img: productImages[4], description: 'Nutrición completa y equilibrada para perros adultos.' },
+      { id: 6, name: 'Whiskas Pescado', category: 'alimento', price: 6900, img: productImages[5], description: 'Alimento para gatos adultos con sabor a pescado. Fórmula con taurina y nutrientes esenciales.' },
+      { id: 7, name: 'Correa reflectante', category: 'accesorio', price: 4200, img: productImages[6], description: 'Correa de alta resistencia con bandas reflectantes para mayor seguridad en paseos nocturnos.' },
+      { id: 8, name: 'Cama ortopédica', category: 'accesorio', price: 18500, img: productImages[7], description: 'Cama ortopédica con espuma de memoria y base antideslizante. Alivia el dolor articular.' },
+      { id: 9, name: 'Juguete cuerda', category: 'accesorio', price: 3800, img: productImages[0], description: 'Juguete de cuerda trenzada para fortalecer los dientes y encías.' },
+      { id: 10, name: 'Bebedero automático', category: 'accesorio', price: 8900, img: productImages[1], description: 'Bebedero automático con filtro de carbón activado. Capacidad de 2.5 litros.' },
+      { id: 11, name: 'Arnés de seguridad', category: 'accesorio', price: 6400, img: productImages[2], description: 'Arnés ajustable con reflectores y agarre ergonómico para paseos seguros.' },
+      { id: 12, name: 'Rascador para gatos', category: 'accesorio', price: 15200, img: productImages[3], description: 'Rascador vertical con plataforma y peluche colgante.' },
+      { id: 13, name: 'Shampoo antipulgas', category: 'higiene', price: 5300, img: productImages[4], description: 'Shampoo natural con aceite de neem y aloe vera. PH balanceado.' },
+      { id: 14, name: 'Cepillo desenredante', category: 'higiene', price: 2900, img: productImages[5], description: 'Cepillo profesional con cerdas suaves que desenredan sin lastimar.' },
+      { id: 15, name: 'Cortaúñas profesional', category: 'higiene', price: 4700, img: productImages[6], description: 'Cortaúñas de precisión con sistema de seguridad para evitar cortes profundos.' },
+      { id: 16, name: 'Limpieza de oídos', category: 'higiene', price: 3400, img: productImages[7], description: 'Solución limpiadora para oídos con fórmula suave y antiséptica.' },
+      { id: 17, name: 'Pasta dental canina', category: 'higiene', price: 4100, img: productImages[0], description: 'Pasta dental enzimática con sabor a pollo. Combate el sarro y mantiene el aliento fresco.' },
+      { id: 18, name: 'Toallitas húmedas', category: 'higiene', price: 2600, img: productImages[1], description: 'Toallitas húmedas hipoalergénicas con aloe vera y manzanilla.' },
+      { id: 19, name: 'Alimento para cachorros', category: 'alimento', price: 10800, img: productImages[2], description: 'Fórmula especial para cachorros en crecimiento. Alto contenido de proteínas y DHA.' },
+      { id: 20, name: 'Alimento senior', category: 'alimento', price: 11900, img: productImages[3], description: 'Nutrición adaptada para perros mayores. Contiene glucosamina y condroitina.' },
+      { id: 21, name: 'Transportín plegable', category: 'accesorio', price: 22300, img: productImages[4], description: 'Transportín plegable y resistente con ventilación y cierre seguro.' },
+      { id: 22, name: 'Bola dispensadora', category: 'accesorio', price: 5600, img: productImages[5], description: 'Bola dispensadora de premios que estimula la mente de tu mascota.' },
+      { id: 23, name: 'Repelente de pulgas', category: 'higiene', price: 7200, img: productImages[6], description: 'Repelente natural a base de aceites esenciales. Protege contra pulgas y garrapatas.' },
+      { id: 24, name: 'Acondicionador de pelo', category: 'higiene', price: 4800, img: productImages[7], description: 'Acondicionador hidratante con keratina y aceite de coco.' }
     ];
 
     const productGrid = document.getElementById('productGrid');
@@ -2532,26 +3432,30 @@
         return;
       }
 
-      productGrid.innerHTML = filtered.map(p => `
-        <div class="product-card">
-          <div class="product-image">
-            <img src="${p.img}" alt="${p.name}" loading="lazy">
-          </div>
-          <div class="product-info">
-            <h4>${p.name}</h4>
-            <div class="category">${p.category}</div>
-            <div class="price">$${p.price.toLocaleString()}</div>
-            <div class="product-actions">
-              <button class="btn-add-cart" onclick="addToCart(${p.id})">
-                <i class="fas fa-cart-plus"></i> Agregar
-              </button>
-              <a href="https://wa.me/5491123456789?text=Hola!%20Quiero%20consultar%20por%20${encodeURIComponent(p.name)}" target="_blank" class="btn-whatsapp-query">
-                <i class="fab fa-whatsapp"></i> Consultar
-              </a>
+      productGrid.innerHTML = filtered.map(p => {
+        const inCart = cart.some(item => item.id === p.id);
+        return `
+          <div class="product-card ${inCart ? 'in-cart' : ''}" data-product-id="${p.id}">
+            <span class="in-cart-badge"><i class="fas fa-check"></i> En carrito</span>
+            <div class="product-image" onclick="openModal(${p.id})">
+              <img src="${p.img}" alt="${p.name}" loading="lazy">
+            </div>
+            <div class="product-info">
+              <h4 onclick="openModal(${p.id})">${p.name}</h4>
+              <div class="category">${p.category}</div>
+              <div class="price">$${p.price.toLocaleString()}</div>
+              <div class="product-actions">
+                <button class="btn-add-cart" onclick="addToCart(${p.id})">
+                  <i class="fas fa-cart-plus"></i> Agregar
+                </button>
+                <button class="btn-view-product" onclick="openModal(${p.id})">
+                  <i class="fas fa-eye"></i> Ver
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     filterButtons.forEach(btn => {
@@ -2572,33 +3476,7 @@
     renderProducts();
 
     // ============================================
-    // 8. GALERÍA
-    // ============================================
-    const galleryGrid = document.getElementById('galleryGrid');
-    const galleryImages = [
-      'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1582562124811-c09040d0a901?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1582571996120-716e13ef9c6a?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1548199973-03cce0bbc87b?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1565557623262-b51c2513a641?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1601758228041-f3b2795255f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80',
-      'https://images.unsplash.com/photo-1589924691995-400dc9ecc119?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
-    ];
-
-    galleryImages.forEach(src => {
-      const item = document.createElement('div');
-      item.className = 'gallery-item';
-      item.innerHTML = `<img src="${src}" alt="Galería La Granja" loading="lazy">`;
-      galleryGrid.appendChild(item);
-    });
-
-    // ============================================
-    // 9. FAQ ACORDEÓN
+    // 8. FAQ ACORDEÓN
     // ============================================
     const faqItems = document.querySelectorAll('.faq-item');
 
@@ -2612,6 +3490,16 @@
         });
         item.classList.toggle('active');
       });
+    });
+
+    // ============================================
+    // 9. NEWSLETTER
+    // ============================================
+    document.getElementById('newsletterForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = e.target.querySelector('input');
+      alert(`✅ ¡Gracias por suscribirte! Te enviaremos novedades a ${input.value}`);
+      input.value = '';
     });
 
     // ============================================
@@ -2675,7 +3563,7 @@
         markers[currentPopup].closePopup();
       }
 
-      map.setView([coord.lat, coord.lng], 15, {
+      map.setView([coord.lat, coord.lng], 14, {
         animate: true,
         duration: 1
       });
@@ -2723,7 +3611,7 @@
     if (mapSection) mapObserver.observe(mapSection);
 
     // ============================================
-    // 12. GEOLOCALIZACIÓN PARA SUCURSAL MÁS CERCANA
+    // 12. GEOLOCALIZACIÓN
     // ============================================
     function calcularDistancia(lat1, lon1, lat2, lon2) {
       const R = 6371;
@@ -2752,7 +3640,6 @@
       return { sucursal: cercana, distancia: distanciaMinima };
     }
 
-    // Intentar obtener ubicación del usuario
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -2760,12 +3647,10 @@
           const resultado = encontrarSucursalCercana(latitude, longitude);
           
           if (resultado.sucursal) {
-            // Resaltar la sucursal más cercana
             document.querySelectorAll('.branch-card').forEach(card => {
               card.classList.remove('active');
               if (card.dataset.branch === resultado.sucursal) {
                 card.classList.add('active');
-                // Mostrar distancia en km
                 const distanceEl = card.querySelector('.distance');
                 if (distanceEl) {
                   distanceEl.textContent = `📍 A ${resultado.distancia.toFixed(1)} km de tu ubicación`;
@@ -2773,13 +3658,11 @@
               }
             });
 
-            // Seleccionar en el formulario
             const select = document.getElementById('branchSelect');
             if (select) {
               select.value = resultado.sucursal;
             }
 
-            // Mostrar en el mapa
             showBranch(resultado.sucursal);
           }
         },
@@ -2789,10 +3672,100 @@
       );
     }
 
-    console.log('🐾 La Granja Veterinaria & PetShop - Versión Definitiva');
-    console.log('🛒 Carrito con agregar/comprar por WhatsApp');
-    console.log('📍 Geolocalización para encontrar la sucursal más cercana');
-    console.log('🎨 Diseño full responsive con logo real');
+    // ============================================
+    // 13. BANNER SLIDER
+    // ============================================
+    let currentSlide = 0;
+    const slides = document.getElementById('bannerSlides');
+    const dots = document.querySelectorAll('.dot');
+    const totalSlides = document.querySelectorAll('.slide').length;
+
+    function goToSlide(index) {
+      if (index < 0) index = totalSlides - 1;
+      if (index >= totalSlides) index = 0;
+      currentSlide = index;
+      slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+      
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === currentSlide);
+      });
+    }
+
+    document.getElementById('bannerPrev').addEventListener('click', () => {
+      goToSlide(currentSlide - 1);
+    });
+
+    document.getElementById('bannerNext').addEventListener('click', () => {
+      goToSlide(currentSlide + 1);
+    });
+
+    dots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        goToSlide(parseInt(dot.dataset.index));
+      });
+    });
+
+    let autoPlay = setInterval(() => {
+      goToSlide(currentSlide + 1);
+    }, 5000);
+
+    const bannerSlider = document.getElementById('bannerSlider');
+    bannerSlider.addEventListener('mouseenter', () => {
+      clearInterval(autoPlay);
+    });
+    bannerSlider.addEventListener('mouseleave', () => {
+      autoPlay = setInterval(() => {
+        goToSlide(currentSlide + 1);
+      }, 5000);
+    });
+
+    // ============================================
+    // 14. HERO SLIDER DE IMÁGENES
+    // ============================================
+    let heroCurrentSlide = 0;
+    const heroSlides = document.querySelectorAll('.hero-slide');
+    const heroDots = document.querySelectorAll('.hero-dot');
+    const totalHeroSlides = heroSlides.length;
+
+    function goToHeroSlide(index) {
+      if (index < 0) index = totalHeroSlides - 1;
+      if (index >= totalHeroSlides) index = 0;
+      heroCurrentSlide = index;
+      
+      heroSlides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === heroCurrentSlide);
+      });
+      
+      heroDots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === heroCurrentSlide);
+      });
+    }
+
+    heroDots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        goToHeroSlide(parseInt(dot.dataset.index));
+      });
+    });
+
+    let heroAutoPlay = setInterval(() => {
+      goToHeroSlide(heroCurrentSlide + 1);
+    }, 4000);
+
+    const heroSection = document.querySelector('.hero');
+    heroSection.addEventListener('mouseenter', () => {
+      clearInterval(heroAutoPlay);
+    });
+    heroSection.addEventListener('mouseleave', () => {
+      heroAutoPlay = setInterval(() => {
+        goToHeroSlide(heroCurrentSlide + 1);
+      }, 4000);
+    });
+
+    console.log('🐾 La Granja Veterinaria & PetShop - Versión Final');
+    console.log('📊 Estadísticas con colores llamativos y visibles');
+    console.log('🖼️ Nuevas imágenes para productos (8 imágenes diferentes)');
+    console.log('🛒 Carrito flotante con badge (0-9, 10+)');
+    console.log('✅ Notificación que desaparece después de 2.5 segundos');
     console.log('👨‍💻 Creado por CIBORG347');
   </script>
 
