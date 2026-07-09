@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin | La Granja</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        /* ==================== RESET & BASE ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f0f2f5;
+            color: #1a202c;
+            line-height: 1.6;
+        }
+        /* ==================== LOGIN ==================== */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b2d45 100%);
+            padding: 20px;
+        }
+        .login-box {
+            background: white;
+            border-radius: 24px;
+            padding: 3rem 2.5rem;
+            max-width: 420px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .login-box .logo-admin {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .login-box .logo-admin i {
+            font-size: 3rem;
+            color: #27ae60;
+            background: #e8f5e9;
+            padding: 16px;
+            border-radius: 16px;
+        }
+        .login-box h2 {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .login-box p {
+            text-align: center;
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        .login-box .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .login-box label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.4rem;
+            color: #2d3748;
+        }
+        .login-box input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        .login-box input:focus {
+            border-color: #27ae60;
+            box-shadow: 0 0 0 4px rgba(39,174,96,0.1);
+        }
+        .login-box .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+        .login-box .btn-login:hover {
+            background: #219a52;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(39,174,96,0.3);
+        }
+        .login-box .error-msg {
+            color: #e53e3e;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 0.8rem;
+            display: none;
+        }
+        /* ==================== ADMIN PANEL ==================== */
+        .admin-panel {
+            display: none;
+            min-height: 100vh;
+        }
+        .admin-panel.active {
+            display: flex;
+        }
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #0d1b2a;
+            color: white;
+            padding: 1.5rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+        }
+        .sidebar .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            margin-bottom: 1.5rem;
+        }
+        .sidebar .brand i {
+            font-size: 2rem;
+            color: #27ae60;
+        }
+        .sidebar .brand span {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+        .sidebar .brand small {
+            display: block;
+            font-size: 0.65rem;
+            opacity: 0.6;
+            font-weight: 400;
+        }
+        .sidebar .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 1.5rem;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            font-size: 0.9rem;
+        }
+        .sidebar .menu-item:hover {
+            background: rgba(255,255,255,0.05);
+            color: white;
+        }
+        .sidebar .menu-item.active {
+            background: rgba(39,174,96,0.15);
+            color: #27ae60;
+            border-left-color: #27ae60;
+        }
+        .sidebar .menu-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 1rem;
+        }
+        .sidebar .logout-btn {
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 1.5rem;
+            color: #e53e3e;
+            cursor: pointer;
+        }
+        .sidebar .logout-btn:hover {
+            background: rgba(229,62,62,0.1);
+        }
+        /* Main Content */
+        .main-content {
+            margin-left: 260px;
+            padding: 2rem;
+            width: 100%;
+            min-height: 100vh;
+        }
+        .main-content .header-admin {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .main-content .header-admin h1 {
+            font-size: 1.8rem;
+        }
+        .main-content .header-admin .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 8px 16px 8px 12px;
+            border-radius: 50px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .main-content .header-admin .admin-user i {
+            font-size: 1.3rem;
+            color: #27ae60;
+        }
+        /* ==================== SECCIONES DEL ADMIN ==================== */
+        .admin-section {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+        .admin-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .admin-section .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .admin-section .section-header h2 {
+            font-size: 1.4rem;
+        }
+        .admin-section .section-header .btn-add {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .admin-section .section-header .btn-add:hover {
+            background: #219a52;
+            transform: translateY(-2px);
+        }
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+        .card-item {
+            background: white;
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .card-item:hover {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+        .card-item .card-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .card-item .card-actions button {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .card-item .card-actions .btn-edit {
+            background: #3182ce;
+            color: white;
+        }
+        .card-item .card-actions .btn-edit:hover {
+            background: #2b6cb0;
+        }
+        .card-item .card-actions .btn-delete {
+            background: #e53e3e;
+            color: white;
+        }
+        .card-item .card-actions .btn-delete:hover {
+            background: #c53030;
+        }
+        .card-item .card-img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 0.8rem;
+            background: #f0f4f8;
+        }
+        .card-item .card-img.small {
+            height: 60px;
+            width: 60px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        .card-item .card-img.icon-img {
+            height: 50px;
+            width: 50px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        .card-item h4 {
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+        .card-item p {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+        .card-item .badge-status {
+            display: inline-block;
+            font-size: 0.7rem;
+            padding: 2px 10px;
+            border-radius: 50px;
+            background: #e2e8f0;
+            color: #4a5568;
+            margin-top: 4px;
+        }
+        /* Estadísticas */
+        .stats-grid-admin {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stats-grid-admin .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        .stats-grid-admin .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #27ae60;
+            display: block;
+        }
+        .stats-grid-admin .stat-card .label {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+        /* Formulario Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-box {
+            background: white;
+            border-radius: 24px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlide 0.3s ease;
+        }
+        @keyframes modalSlide {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .modal-box .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .modal-box .modal-header h3 {
+            font-size: 1.3rem;
+        }
+        .modal-box .modal-header .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #718096;
+            transition: color 0.3s ease;
+        }
+        .modal-box .modal-header .close-modal:hover {
+            color: #e53e3e;
+        }
+        .modal-box .form-group {
+            margin-bottom: 1.2rem;
+        }
+        .modal-box label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+            color: #2d3748;
+        }
+        .modal-box input, .modal-box textarea, .modal-box select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            outline: none;
+            font-family: inherit;
+        }
+        .modal-box input:focus, .modal-box textarea:focus, .modal-box select:focus {
+            border-color: #27ae60;
+            box-shadow: 0 0 0 4px rgba(39,174,96,0.1);
+        }
+        .modal-box textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .modal-box .btn-submit {
+            width: 100%;
+            padding: 12px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .modal-box .btn-submit:hover {
+            background: #219a52;
+        }
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+            .menu-toggle-btn {
+                display: flex !important;
+            }
+            .stats-grid-admin {
+                grid-template-columns: 1fr 1fr;
+            }
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+            .login-box {
+                padding: 2rem 1.5rem;
+            }
+        }
+        .menu-toggle-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #1a202c;
+            cursor: pointer;
+            padding: 8px;
+        }
+        @media (max-width: 480px) {
+            .stats-grid-admin {
+                grid-template-columns: 1fr;
+            }
+            .modal-box {
+                padding: 1.5rem;
+            }
+        }
+        /* Scrollbar personalizada */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f0f2f5;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a0aec0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== LOGIN ==================== -->
+<div id="loginContainer" class="login-container">
+    <div class="login-box">
+        <div class="logo-admin">
+            <i class="fas fa-paw"></i>
+        </div>
+        <h2>Panel de Administración</h2>
+        <p>Ingresá tus credenciales para gestionar la web</p>
+        <form id="loginForm">
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Usuario</label>
+                <input type="email" id="loginUser" placeholder="ciborg347@gmail.com" value="ciborg347@gmail.com">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-lock"></i> Contraseña</label>
+                <input type="password" id="loginPass" placeholder="••••••••" value="34714589">
+            </div>
+            <button type="submit" class="btn-login"><i class="fas fa-sign-in-alt"></i> Ingresar</button>
+            <div id="loginError" class="error-msg">❌ Usuario o contraseña incorrectos</div>
+        </form>
+    </div>
+</div>
+
+<!-- ==================== ADMIN PANEL ==================== -->
+<div id="adminPanel" class="admin-panel">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <i class="fas fa-paw"></i>
+            <div>
+                <span>La Granja</span>
+                <small>Panel Admin</small>
+            </div>
+        </div>
+        <nav>
+            <div class="menu-item active" data-section="dashboard"><i class="fas fa-home"></i> Dashboard</div>
+            <div class="menu-item" data-section="stats"><i class="fas fa-chart-bar"></i> Estadísticas</div>
+            <div class="menu-item" data-section="products"><i class="fas fa-box"></i> Productos</div>
+            <div class="menu-item" data-section="banners"><i class="fas fa-images"></i> Banners</div>
+            <div class="menu-item" data-section="brands"><i class="fas fa-tag"></i> Marcas</div>
+            <div class="menu-item" data-section="services"><i class="fas fa-concierge-bell"></i> Servicios</div>
+            <div class="menu-item" data-section="branches"><i class="fas fa-store"></i> Sucursales</div>
+            <div class="menu-item" data-section="testimonials"><i class="fas fa-comment"></i> Testimonios</div>
+            <div class="menu-item" data-section="gallery"><i class="fas fa-camera"></i> Galería</div>
+            <div class="menu-item" data-section="payments"><i class="fas fa-credit-card"></i> Medios de Pago</div>
+            <div class="menu-item" data-section="faq"><i class="fas fa-question-circle"></i> Preguntas Frecuentes</div>
+            <div class="menu-item" data-section="social"><i class="fas fa-share-alt"></i> Redes Sociales</div>
+            <div class="menu-item" data-section="contact"><i class="fas fa-phone"></i> Contacto</div>
+            <div class="menu-item" data-section="hero"><i class="fas fa-heading"></i> Hero</div>
+            <div class="menu-item" data-section="benefits"><i class="fas fa-medal"></i> Beneficios</div>
+            <div class="menu-item logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header-admin">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <button class="menu-toggle-btn" id="menuToggleBtn"><i class="fas fa-bars"></i></button>
+                <h1 id="sectionTitle">Dashboard</h1>
+            </div>
+            <div class="admin-user">
+                <i class="fas fa-user-circle"></i>
+                <span id="adminUserEmail">ciborg347@gmail.com</span>
+            </div>
+        </div>
+
+        <!-- ==================== DASHBOARD ==================== -->
+        <div id="section-dashboard" class="admin-section active">
+            <div class="stats-grid-admin" id="dashboardStats">
+                <div class="stat-card"><span class="number" id="statMascotas">0</span><span class="label">Mascotas atendidas</span></div>
+                <div class="stat-card"><span class="number" id="statClientes">0</span><span class="label">Clientes felices</span></div>
+                <div class="stat-card"><span class="number" id="statAnios">0</span><span class="label">Años de experiencia</span></div>
+                <div class="stat-card"><span class="number" id="statProductos">0</span><span class="label">Productos disponibles</span></div>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <div class="stat-card"><span class="number" id="totalProducts">0</span><span class="label">Total Productos</span></div>
+                <div class="stat-card"><span class="number" id="totalBanners">0</span><span class="label">Total Banners</span></div>
+                <div class="stat-card"><span class="number" id="totalTestimonios">0</span><span class="label">Total Testimonios</span></div>
+                <div class="stat-card"><span class="number" id="totalSucursales">0</span><span class="label">Total Sucursales</span></div>
+            </div>
+            <div style="margin-top: 2rem; background: #e8f5e9; padding: 1.5rem; border-radius: 16px; border: 1px solid #c8e6c9;">
+                <p style="color: #2e7d32;"><i class="fas fa-info-circle"></i> <strong>Consejo:</strong> Todos los cambios se guardan automáticamente en tu navegador. Cuando estés listo, podés migrar a Supabase.</p>
+            </div>
+        </div>
+
+        <!-- ==================== ESTADÍSTICAS ==================== -->
+        <div id="section-stats" class="admin-section">
+            <div class="section-header"><h2><i class="fas fa-chart-bar"></i> Editar Estadísticas</h2></div>
+            <div class="card-grid" id="statsList"></div>
+        </div>
+
+        <!-- ==================== PRODUCTOS ==================== -->
+        <div id="section-products" class="admin-section">
+            <div class="section-header">
+                <h2><i class="fas fa-box"></i> Productos</h2>
+                <button class="btn-add" onclick="openModal('product')"><i class="fas fa-plus"></i> Agregar</button>
+            </div>
+            <div class="card-grid" id="productsList"></div>
+        </div>
+
+        <!-- ==================== BANNERS ==================== -->
+        <div id="section-banners" class="admin-section">
+            <div class="section-header">
+                <h2><i class="fas fa-images"></i> Banners</h2>
+                <button class="btn-add" onclick="openModal('banner')"><i class="fas fa-plus"></i> Agregar</button>
+            </div>
+            <div class="card-grid" id="bannersList"></div>
+        </div>
+
+        <!-- ==================== MARCAS ==================== -->
+        <div id="section-brands" class="admin-section">
+            <div class="section-header">
+                <h2><i class="fas fa-tag"></i> Marcas</h2>
+                <button class="btn-add" onclick="openModal('brand')"><i class="fas fa-plus"></i> Agregar</button>
+            </div>
+            <div class="card-grid" id="brandsList"></div>
+        </div>
+
+        <!-- ==================== SERVICIOS ==================== -->
+        <div id="section-services" class="admin-section">
+            <div class="section-header">
+                <h2><i class="fas fa-concierge-bell"></i> Servicios</h2>
+                <button class="btn-add" onclick="openModal('service')"><i class="fas fa-plus"></i> Agregar</button>
+            </div>
+            <div class="card-grid" id="servicesList"></div>
+        </div>
+
+        <!-- ==================== SUCURSALES ==================== -->
+        <div id="section-branches" class="admin-section">
+            <div class="section-header">
+                <h2><i class="fas fa-store"></i> Sucursales</h2>
+                <button class="btn-add" onclick="openModal('branch')"><i class="fas fa-plus"></i> Agregar</button>
+            </div>
+            <div class="card-grid" id="branchesList"></div>
+        </div>
+
+        <!-- ==================== TESTIMONIOS ==================== -->
+        <div id="section-testimonials" class="admin-section">
+            <div class="section-header">
+                <h2><i class="fas fa-comment"></i> Testimonios</h2>
+                <button class="btn-add" onclick="openModal('testimonial')"><i class="fas fa-plus"></i> Agregar</button>
+            </div>
+            <div class="card-grid" id="testimonialsList"></div>
+        </div>
+
+        <!-- ==================== GALERÍA ==================== -->
+        <div id="section-gallery" class="admin-section">
+            <div class="section-header">
+                <h2><i class="fas fa-camera"></i> Galería</h2>
+                <button class="btn-add" onclick="openModal('gallery')"><i class="fas fa-plus"></i> Agregar</button>
+            </div>
+            <div class="card-grid" id="galleryList"></div>
+        </div>
+
+        <!-- ==================== MEDIOS DE PAGO ==================== -->
+        <div id="section-payments" class="admin-section">
+            <div class="section-header">
+                <h2><i class="fas fa-credit-card"></i> Medios de Pago</h2>
+                <button class="btn-add" onclick="openModal('payment')"><i class="fas fa-plus"></i> Agregar</button>
+            </div>
+            <div class="card-grid" id="paymentsList"></div>
+        </div>
+
+        <!-- ==================== FAQ ==================== -->
+        <div id="section-faq" class="admin-section">
+            <div class="section-header">
+                <h2><i class="fas fa-question-circle"></i> Preguntas Frecuentes</h2>
+                <button class="btn-add" onclick="openModal('faq')"><i class="fas fa-plus"></i> Agregar</button>
+            </div>
+            <div class="card-grid" id="faqList"></div>
+        </div>
+
+        <!-- ==================== REDES SOCIALES ==================== -->
+        <div id="section-social" class="admin-section">
+            <div class="section-header"><h2><i class="fas fa-share-alt"></i> Redes Sociales</h2></div>
+            <div class="card-grid" id="socialList"></div>
+        </div>
+
+        <!-- ==================== CONTACTO ==================== -->
+        <div id="section-contact" class="admin-section">
+            <div class="section-header"><h2><i class="fas fa-phone"></i> Contacto</h2></div>
+            <div class="card-grid" id="contactList"></div>
+        </div>
+
+        <!-- ==================== HERO ==================== -->
+        <div id="section-hero" class="admin-section">
+            <div class="section-header"><h2><i class="fas fa-heading"></i> Hero</h2></div>
+            <div class="card-grid" id="heroList"></div>
+        </div>
+
+        <!-- ==================== BENEFICIOS ==================== -->
+        <div id="section-benefits" class="admin-section">
+            <div class="section-header">
+                <h2><i class="fas fa-medal"></i> Beneficios</h2>
+                <button class="btn-add" onclick="openModal('benefit')"><i class="fas fa-plus"></i> Agregar</button>
+            </div>
+            <div class="card-grid" id="benefitsList"></div>
+        </div>
+
+    </main>
+</div>
+
+<!-- ==================== MODAL ==================== -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="modalTitle">Agregar</h3>
+            <button class="close-modal" onclick="closeModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <form id="modalForm">
+            <div id="modalFields"></div>
+            <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Guardar</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // 1. CONFIGURACIÓN
+    // ============================================================
+    const ADMIN_USER = 'ciborg347@gmail.com';
+    const ADMIN_PASS = '34714589';
+
+    // ============================================================
+    // 2. DATOS INICIALES
+    // ============================================================
+    const defaultData = {
+        stats: [
+            { id: 'stat1', label: 'Mascotas atendidas', value: 12450, icon: 'fa-paw' },
+            { id: 'stat2', label: 'Clientes felices', value: 8750, icon: 'fa-smile' },
+            { id: 'stat3', label: 'Años de experiencia', value: 15, icon: 'fa-calendar-check' },
+            { id: 'stat4', label: 'Productos disponibles', value: 3200, icon: 'fa-boxes' }
+        ],
+        products: [
+            { id: 'p1', name: 'Royal Canin Adulto', category: 'alimento', price: 12500, img: 'https://iili.io/ClgGNkX.jpg', description: 'Alimento balanceado para perros adultos de raza mediana.' },
+            { id: 'p2', name: 'Pro Plan OptiHealth', category: 'alimento', price: 14200, img: 'https://iili.io/ClgGw7t.jpg', description: 'Nutrición avanzada para perros adultos.' },
+            { id: 'p3', name: 'Purina Excellent', category: 'alimento', price: 9800, img: 'https://iili.io/ClgGXrN.jpg', description: 'Alimento premium con ingredientes naturales.' }
+        ],
+        banners: [
+            { id: 'b1', title: '15% OFF en alimentos', description: 'Válido hasta el 31 de julio', btnText: 'Ver promociones', btnLink: '#petshop', img: 'https://iili.io/ClgA1vR.md.jpg' },
+            { id: 'b2', title: 'Consulta gratuita', description: 'Primera consulta sin cargo', btnText: 'Agendar ahora', btnLink: '#contacto', img: 'https://iili.io/ClgAEpp.webp' }
+        ],
+        brands: [
+            { id: 'br1', name: 'Royal Canin', logo: 'https://fhxcumwhgtfirznnznjx.supabase.co/storage/v1/object/public/IMAGEN%20VETERINARIA/6027f9eaed4efb0004199870.png' },
+            { id: 'br2', name: 'Pro Plan', logo: 'https://fhxcumwhgtfirznnznjx.supabase.co/storage/v1/object/public/IMAGEN%20VETERINARIA/6027f9eaed4efb0004199870.png' },
+            { id: 'br3', name: 'Purina', logo: 'https://fhxcumwhgtfirznnznjx.supabase.co/storage/v1/object/public/IMAGEN%20VETERINARIA/5ae22df933b73fa43b1a8946.png' }
+        ],
+        services: [
+            { id: 's1', icon: 'fa-heartbeat', title: 'Consultas generales', description: 'Revisión completa, vacunación y desparasitación.' },
+            { id: 's2', icon: 'fa-bone', title: 'Odontología', description: 'Limpieza dental y extracciones sin dolor.' },
+            { id: 's3', icon: 'fa-syringe', title: 'Vacunación', description: 'Calendario completo y certificado internacional.' }
+        ],
+        branches: [
+            { id: 'brch1', name: 'Garín', address: 'Cigliutti 201', badge: '📍 Central', lat: -34.4197, lng: -58.8431 },
+            { id: 'brch2', name: 'Benavídez', address: 'Belgrano 2620', badge: 'PetShop + Clínica', lat: -34.4062, lng: -58.7064 }
+        ],
+        testimonials: [
+            { id: 't1', name: 'Laura G.', text: 'Atención increíble, mi perro siempre vuelve feliz.', stars: 5, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80' }
+        ],
+        gallery: [
+            { id: 'g1', img: 'https://iili.io/Clgx4N1.md.jpg' },
+            { id: 'g2', img: 'https://iili.io/ClgAl3J.md.jpg' }
+        ],
+        payments: [
+            { id: 'pay1', name: 'Visa', icon: 'fab fa-cc-visa', badge: '' },
+            { id: 'pay2', name: 'Mastercard', icon: 'fab fa-cc-mastercard', badge: '' }
+        ],
+        faq: [
+            { id: 'f1', question: '¿Cuáles son los horarios de atención?', answer: 'Lunes a sábados de 8:00 a 20:00 h.' }
+        ],
+        social: [
+            { id: 'social1', name: 'Facebook', url: '#', icon: 'fab fa-facebook' },
+            { id: 'social2', name: 'Instagram', url: '#', icon: 'fab fa-instagram' }
+        ],
+        contact: [
+            { id: 'c1', name: 'Dirección', value: 'Cigliutti 201, Garín CP 1619', icon: 'fas fa-map-pin' },
+            { id: 'c2', name: 'Teléfono', value: '+54 11 2345-6789', icon: 'fas fa-phone' },
+            { id: 'c3', name: 'WhatsApp', value: '+54 9 11 2345-6789', icon: 'fab fa-whatsapp' },
+            { id: 'c4', name: 'Email', value: 'info@lagranjavet.com', icon: 'fas fa-envelope' },
+            { id: 'c5', name: 'Horarios', value: 'Lun a Sáb: 8:00 - 20:00', icon: 'fas fa-clock' }
+        ],
+        hero: [
+            { id: 'h1', name: 'Título', value: 'Cuidado profesional y productos de calidad para tu mascota' },
+            { id: 'h2', name: 'Subtítulo', value: 'Clínica, peluquería, pet shop y envíos. Todo lo que tu mascota necesita en un solo lugar.' }
+        ],
+        benefits: [
+            { id: 'ben1', icon: 'fa-award', title: 'Excelencia profesional', description: 'Equipo certificado con años de experiencia' },
+            { id: 'ben2', icon: 'fa-heart', title: 'Atención personalizada', description: 'Trato cálido y dedicado para cada mascota' }
+        ]
+    };
+
+    // ============================================================
+    // 3. GESTIÓN DE DATOS (LocalStorage)
+    // ============================================================
+    function getData() {
+        try {
+            const stored = localStorage.getItem('lagranja_admin_data');
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                // Asegurar que todas las secciones existan
+                const result = { ...defaultData };
+                Object.keys(defaultData).forEach(key => {
+                    if (parsed[key]) result[key] = parsed[key];
+                });
+                return result;
+            }
+        } catch (e) {}
+        return JSON.parse(JSON.stringify(defaultData));
+    }
+
+    function saveData(data) {
+        localStorage.setItem('lagranja_admin_data', JSON.stringify(data));
+    }
+
+    function getSection(section) {
+        const data = getData();
+        return data[section] || [];
+    }
+
+    function saveSection(section, items) {
+        const data = getData();
+        data[section] = items;
+        saveData(data);
+    }
+
+    function generateId() {
+        return Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+    }
+
+    // ============================================================
+    // 4. LOGIN
+    // ============================================================
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const user = document.getElementById('loginUser').value.trim();
+        const pass = document.getElementById('loginPass').value.trim();
+        const error = document.getElementById('loginError');
+
+        if (user === ADMIN_USER && pass === ADMIN_PASS) {
+            error.style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('adminPanel').classList.add('active');
+            document.getElementById('adminUserEmail').textContent = user;
+            loadDashboard();
+            loadAllSections();
+            // Guardar sesión
+            sessionStorage.setItem('admin_logged', 'true');
+        } else {
+            error.style.display = 'block';
+            setTimeout(() => error.style.display = 'none', 3000);
+        }
+    });
+
+    // Verificar sesión
+    if (sessionStorage.getItem('admin_logged') === 'true') {
+        document.getElementById('loginContainer').style.display = 'none';
+        document.getElementById('adminPanel').classList.add('active');
+        document.getElementById('adminUserEmail').textContent = ADMIN_USER;
+        loadDashboard();
+        loadAllSections();
+    }
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        sessionStorage.removeItem('admin_logged');
+        document.getElementById('adminPanel').classList.remove('active');
+        document.getElementById('loginContainer').style.display = 'flex';
+    });
+
+    // ============================================================
+    // 5. NAVEGACIÓN
+    // ============================================================
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+            this.classList.add('active');
+            const section = this.dataset.section;
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+            const target = document.getElementById('section-' + section);
+            if (target) {
+                target.classList.add('active');
+                document.getElementById('sectionTitle').textContent = this.textContent.trim();
+            }
+            // Cerrar sidebar en móvil
+            document.getElementById('sidebar').classList.remove('open');
+            // Cargar datos de la sección
+            loadSectionData(section);
+        });
+    });
+
+    // Toggle sidebar móvil
+    document.getElementById('menuToggleBtn').addEventListener('click', function() {
+        document.getElementById('sidebar').classList.toggle('open');
+    });
+
+    // ============================================================
+    // 6. LOAD DASHBOARD
+    // ============================================================
+    function loadDashboard() {
+        const data = getData();
+        const stats = data.stats || [];
+        stats.forEach(stat => {
+            const el = document.getElementById('stat' + stat.label.replace(/\s/g,''));
+            if (el) el.textContent = stat.value.toLocaleString();
+        });
+        document.getElementById('totalProducts').textContent = (data.products || []).length;
+        document.getElementById('totalBanners').textContent = (data.banners || []).length;
+        document.getElementById('totalTestimonios').textContent = (data.testimonials || []).length;
+        document.getElementById('totalSucursales').textContent = (data.branches || []).length;
+    }
+
+    // ============================================================
+    // 7. RENDERIZAR SECCIONES
+    // ============================================================
+    const sectionRenderers = {
+        stats: renderStats,
+        products: renderProducts,
+        banners: renderBanners,
+        brands: renderBrands,
+        services: renderServices,
+        branches: renderBranches,
+        testimonials: renderTestimonials,
+        gallery: renderGallery,
+        payments: renderPayments,
+        faq: renderFaq,
+        social: renderSocial,
+        contact: renderContact,
+        hero: renderHero,
+        benefits: renderBenefits
+    };
+
+    function loadAllSections() {
+        Object.keys(sectionRenderers).forEach(key => {
+            sectionRenderers[key]();
+        });
+    }
+
+    function loadSectionData(section) {
+        if (sectionRenderers[section]) {
+            sectionRenderers[section]();
+        }
+    }
+
+    // -------- STATS --------
+    function renderStats() {
+        const items = getSection('stats');
+        const container = document.getElementById('statsList');
+        container.innerHTML = items.map(stat => `
+            <div class="card-item">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+                    <i class="fas ${stat.icon}" style="font-size:1.8rem;color:#27ae60;"></i>
+                    <div><h4>${stat.label}</h4><p style="font-size:1.5rem;font-weight:700;color:#27ae60;">${stat.value.toLocaleString()}</p></div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn-edit" onclick="editItem('stats','${stat.id}')"><i class="fas fa-edit"></i> Editar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // -------- PRODUCTS --------
+    function renderProducts() {
+        const items = getSection('products');
+        const container = document.getElementById('productsList');
+        container.innerHTML = items.map(p => `
+            <div class="card-item">
+                <img src="${p.img}" alt="${p.name}" class="card-img">
+                <h4>${p.name}</h4>
+                <p>Categoría: ${p.category}</p>
+                <p><strong>$${p.price.toLocaleString()}</strong></p>
+                <p style="font-size:0.85rem;color:#718096;">${p.description ? p.description.substring(0,80)+'...' : ''}</p>
+                <div class="card-actions">
+                    <button class="btn-edit" onclick="editItem('products','${p.id}')"><i class="fas fa-edit"></i> Editar</button>
+                    <button class="btn-delete" onclick="deleteItem('products','${p.id}')"><i class="fas fa-trash"></i> Eliminar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // -------- BANNERS --------
+    function renderBanners() {
+        const items = getSection('banners');
+        const container = document.getElementById('bannersList');
+        container.innerHTML = items.map(b => `
+            <div class="card-item">
+                <img src="${b.img}" alt="${b.title}" class="card-img">
+                <h4>${b.title}</h4>
+                <p>${b.description}</p>
+                <p><span class="badge-status">${b.btnText}</span></p>
+                <div class="card-actions">
+                    <button class="btn-edit" onclick="editItem('banners','${b.id}')"><i class="fas fa-edit"></i> Editar</button>
+                    <button class="btn-delete" onclick="deleteItem('banners','${b.id}')"><i class="fas fa-trash"></i> Eliminar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // -------- BRANDS --------
+    function renderBrands() {
+        const items = getSection('brands');
+        const container = document.getElementById('brandsList');
+        container.innerHTML = items.map(b => `
+            <div class="card-item" style="display:flex;align-items:center;gap:1rem;">
+                <img src="${b.logo}" alt="${b.name}" class="card-img small">
+                <div><h4>${b.name}</h4></div>
+                <div class="card-actions" style="margin-left:auto;">
+                    <button class="btn-edit" onclick="editItem('brands','${b.id}')"><i class="fas fa-edit"></i></button>
+                    <button class="btn-delete" onclick="deleteItem('brands','${b.id}')"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // -------- SERVICES --------
+    function renderServices() {
+        const items = getSection('services');
+        const container = document.getElementById('servicesList');
+        container.innerHTML = items.map(s => `
+            <div class="card-item">
+                <i class="fas ${s.icon}" style="font-size:2.5rem;color:#27ae60;margin-bottom:0.5rem;"></i>
+                <h4>${s.title}</h4>
+                <p>${s.description}</p>
+                <div class="card-actions">
+                    <button class="btn-edit" onclick="editItem('services','${s.id}')"><i class="fas fa-edit"></i> Editar</button>
+                    <button class="btn-delete" onclick="deleteItem('services','${s.id}')"><i class="fas fa-trash"></i> Eliminar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // -------- BRANCHES --------
+    function renderBranches() {
+        const items = getSection('branches');
+        const container = document.getElementById('branchesList');
+        container.innerHTML = items.map(b => `
+            <div class="card-item">
+                <h4><i class="fas fa-store" style="color:#27ae60;"></i> ${b.name}</h4>
+                <p>${b.address}</p>
+                <p><span class="badge-status">${b.badge || ''}</span></p>
+                <p style="font-size:0.8rem;color:#718096;">Lat: ${b.lat}, Lng: ${b.lng}</p>
+                <div class="card-actions">
+                    <button class="btn-edit" onclick="editItem('branches','${b.id}')"><i class="fas fa-edit"></i> Editar</button>
+                    <button class="btn-delete" onclick="deleteItem('branches','${b.id}')"><i class="fas fa-trash"></i> Eliminar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // -------- TESTIMONIALS --------
+    function renderTestimonials() {
+        const items = getSection('testimonials');
+        const container = document.getElementById('testimonialsList');
+        container.innerHTML = items.map(t => `
+            <div class="card-item">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <img src="${t.avatar || 'https://ui-avatars.com/api/?name='+encodeURIComponent(t.name)}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">
+                    <div><h4>${t.name}</h4><p>${'★'.repeat(t.stars||5)}</p></div>
+                </div>
+                <p style="font-style:italic;margin-top:0.5rem;">"${t.text}"</p>
+                <div class="card-actions">
+                    <button class="btn-edit" onclick="editItem('testimonials','${t.id}')"><i class="fas fa-edit"></i> Editar</button>
+                    <button class="btn-delete" onclick="deleteItem('testimonials','${t.id}')"><i class="fas fa-trash"></i> Eliminar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // -------- GALLERY --------
+    function renderGallery() {
+        const items = getSection('gallery');
+        const container = document.getElementById('galleryList');
+        container.innerHTML = items.map(g => `
+            <div class="card-item">
+                <img src="${g.img}" alt="Galería" class="card-img">
+                <div class="card-actions">
+                    <button class="btn-delete" onclick="deleteItem('gallery','${g.id}')"><i class="fas fa-trash"></i> Eliminar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // -------- PAYMENTS --------
+    function renderPayments() {
+        const items = getSection('payments');
+        const container = document.getElementById('paymentsList');
+        container.innerHTML = items.map(p => `
+            <div class="card-item">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <i class="${p.icon}" style="font-size:2.5rem;color:#4a5568;"></i>
+                    <div><h4>${p.name}</h4>${p.badge ? `<span class="badge-status">${p.badge}</span>` : ''}</div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn-edit" onclick="editItem('payments','${p.id}')"><i class="fas fa-edit"></i> Editar</button>
+                    <button class="btn-delete" onclick="deleteItem('payments','${p.id}')"><i class="fas fa-trash"></i> Eliminar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // -------- FAQ --------
+    function renderFaq() {
+        const items = getSection('faq');
+        const container = document.getElementById('faqList');
+        container.innerHTML = items.map(f => `
+            <div class="card-item">
+                <h4>❓ ${f.question}</h4>
+                <p>${f.answer}</p>
+                <div class="card-actions">
+                    <button class="btn-edit" onclick="editItem('faq','${f.id}')"><i class="fas fa-edit"></i> Editar</button>
+                    <button class="btn-delete" onclick="deleteItem('faq','${f.id}')"><i class="fas fa-trash"></i> Eliminar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // -------- SOCIAL --------
+    function renderSocial() {
+        const items = getSection('social');
+        const container = document.getElementById('socialList');
+        container.innerHTML = items.map(s => `
+            <div class="card-item" style="display:flex;align-items:center;gap:1rem;">
+                <i class="${s.icon}" style="font-size:2rem;color:#4a5568;"></i>
+                <div><h4>${s.name}</h4><p style="font-size:0.85rem;word-break:break-all;">${s.url}</p></div>
+                <div class="card-actions" style="margin-left:auto;">
+                    <button class="btn-edit" onclick="editItem('social','${s.id}')"><i class="fas fa-edit"></i> Editar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // -------- CONTACT --------
+    function renderContact() {
+        const items = getSection('contact');
+        const container = document.getElementById('contactList');
+        container.innerHTML = items.map(c => `
+            <div class="card-item" style="display:flex;align-items:center;gap:1rem;">
+                <i class="${c.icon}" style="font-size:1.8rem;color:#27ae60;width:40px;text-align:center;"></i>
+                <div><h4>${c.name}</h4><p>${c.value}</p></div>
+                <div class="card-actions" style="margin-left:auto;">
+                    <button class="btn-edit" onclick="editItem('contact','${c.id}')"><i class="fas fa-edit"></i> Editar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // -------- HERO --------
+    function renderHero() {
+        const items = getSection('hero');
+        const container = document.getElementById('heroList');
+        container.innerHTML = items.map(h => `
+            <div class="card-item">
+                <h4>${h.name}</h4>
+                <p style="font-size:1rem;font-weight:500;">${h.value}</p>
+                <div class="card-actions">
+                    <button class="btn-edit" onclick="editItem('hero','${h.id}')"><i class="fas fa-edit"></i> Editar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // -------- BENEFITS --------
+    function renderBenefits() {
+        const items = getSection('benefits');
+        const container = document.getElementById('benefitsList');
+        container.innerHTML = items.map(b => `
+            <div class="card-item">
+                <i class="fas ${b.icon}" style="font-size:2.5rem;color:#27ae60;margin-bottom:0.5rem;"></i>
+                <h4>${b.title}</h4>
+                <p>${b.description}</p>
+                <div class="card-actions">
+                    <button class="btn-edit" onclick="editItem('benefits','${b.id}')"><i class="fas fa-edit"></i> Editar</button>
+                    <button class="btn-delete" onclick="deleteItem('benefits','${b.id}')"><i class="fas fa-trash"></i> Eliminar</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // ============================================================
+    // 8. MODAL - AGREGAR/EDITAR
+    // ============================================================
+    let currentSection = '';
+    let currentEditId = null;
+
+    function openModal(section, id = null) {
+        currentSection = section;
+        currentEditId = id;
+        const data = getSection(section);
+        let item = null;
+        if (id) item = data.find(d => d.id === id);
+
+        const modal = document.getElementById('modalOverlay');
+        const title = document.getElementById('modalTitle');
+        const fields = document.getElementById('modalFields');
+
+        title.textContent = id ? 'Editar' : 'Agregar ' + getSectionLabel(section);
+
+        // Generar campos según sección
+        const fieldConfigs = getFieldConfigs(section, item);
+        fields.innerHTML = fieldConfigs.map(f => `
+            <div class="form-group">
+                <label>${f.label}</label>
+                ${f.type === 'textarea' ? `<textarea id="field_${f.key}" placeholder="${f.placeholder || ''}">${f.value || ''}</textarea>` :
+                  f.type === 'select' ? `<select id="field_${f.key}">${f.options.map(o => `<option value="${o}" ${f.value === o ? 'selected' : ''}>${o}</option>`).join('')}</select>` :
+                  `<input type="${f.type}" id="field_${f.key}" value="${f.value || ''}" placeholder="${f.placeholder || ''}">`}
+            </div>
+        `).join('');
+
+        modal.classList.add('active');
+    }
+
+    function getSectionLabel(section) {
+        const labels = {
+            stats: 'Estadística',
+            products: 'Producto',
+            banners: 'Banner',
+            brands: 'Marca',
+            services: 'Servicio',
+            branches: 'Sucursal',
+            testimonials: 'Testimonio',
+            gallery: 'Imagen',
+            payments: 'Medio de Pago',
+            faq: 'Pregunta',
+            social: 'Red Social',
+            contact: 'Contacto',
+            hero: 'Hero',
+            benefits: 'Beneficio'
+        };
+        return labels[section] || section;
+    }
+
+    function getFieldConfigs(section, item) {
+        const configs = {
+            stats: [
+                { key: 'label', label: 'Etiqueta', type: 'text', value: item?.label || '' },
+                { key: 'value', label: 'Valor', type: 'number', value: item?.value || '' },
+                { key: 'icon', label: 'Icono (ej: fa-paw)', type: 'text', value: item?.icon || 'fa-paw' }
+            ],
+            products: [
+                { key: 'name', label: 'Nombre', type: 'text', value: item?.name || '' },
+                { key: 'category', label: 'Categoría', type: 'select', value: item?.category || 'alimento', options: ['alimento', 'accesorio', 'higiene'] },
+                { key: 'price', label: 'Precio', type: 'number', value: item?.price || '' },
+                { key: 'img', label: 'URL Imagen', type: 'text', value: item?.img || '' },
+                { key: 'description', label: 'Descripción', type: 'textarea', value: item?.description || '' }
+            ],
+            banners: [
+                { key: 'title', label: 'Título', type: 'text', value: item?.title || '' },
+                { key: 'description', label: 'Descripción', type: 'text', value: item?.description || '' },
+                { key: 'btnText', label: 'Texto del botón', type: 'text', value: item?.btnText || 'Ver más' },
+                { key: 'btnLink', label: 'Link del botón', type: 'text', value: item?.btnLink || '#' },
+                { key: 'img', label: 'URL Imagen', type: 'text', value: item?.img || '' }
+            ],
+            brands: [
+                { key: 'name', label: 'Nombre', type: 'text', value: item?.name || '' },
+                { key: 'logo', label: 'URL Logo', type: 'text', value: item?.logo || '' }
+            ],
+            services: [
+                { key: 'icon', label: 'Icono (ej: fa-heartbeat)', type: 'text', value: item?.icon || 'fa-paw' },
+                { key: 'title', label: 'Título', type: 'text', value: item?.title || '' },
+                { key: 'description', label: 'Descripción', type: 'textarea', value: item?.description || '' }
+            ],
+            branches: [
+                { key: 'name', label: 'Nombre', type: 'text', value: item?.name || '' },
+                { key: 'address', label: 'Dirección', type: 'text', value: item?.address || '' },
+                { key: 'badge', label: 'Badge (ej: Central)', type: 'text', value: item?.badge || '' },
+                { key: 'lat', label: 'Latitud', type: 'text', value: item?.lat || '' },
+                { key: 'lng', label: 'Longitud', type: 'text', value: item?.lng || '' }
+            ],
+            testimonials: [
+                { key: 'name', label: 'Nombre', type: 'text', value: item?.name || '' },
+                { key: 'text', label: 'Testimonio', type: 'textarea', value: item?.text || '' },
+                { key: 'stars', label: 'Estrellas (1-5)', type: 'number', value: item?.stars || 5 },
+                { key: 'avatar', label: 'URL Foto', type: 'text', value: item?.avatar || '' }
+            ],
+            gallery: [
+                { key: 'img', label: 'URL Imagen', type: 'text', value: item?.img || '' }
+            ],
+            payments: [
+                { key: 'name', label: 'Nombre', type: 'text', value: item?.name || '' },
+                { key: 'icon', label: 'Icono (ej: fab fa-cc-visa)', type: 'text', value: item?.icon || 'fas fa-credit-card' },
+                { key: 'badge', label: 'Badge (ej: Nuevo)', type: 'text', value: item?.badge || '' }
+            ],
+            faq: [
+                { key: 'question', label: 'Pregunta', type: 'text', value: item?.question || '' },
+                { key: 'answer', label: 'Respuesta', type: 'textarea', value: item?.answer || '' }
+            ],
+            social: [
+                { key: 'name', label: 'Nombre', type: 'text', value: item?.name || '' },
+                { key: 'url', label: 'URL', type: 'text', value: item?.url || '' },
+                { key: 'icon', label: 'Icono (ej: fab fa-facebook)', type: 'text', value: item?.icon || 'fab fa-link' }
+            ],
+            contact: [
+                { key: 'name', label: 'Nombre', type: 'text', value: item?.name || '' },
+                { key: 'value', label: 'Valor', type: 'text', value: item?.value || '' },
+                { key: 'icon', label: 'Icono (ej: fas fa-phone)', type: 'text', value: item?.icon || 'fas fa-link' }
+            ],
+            hero: [
+                { key: 'name', label: 'Nombre', type: 'text', value: item?.name || '' },
+                { key: 'value', label: 'Texto', type: 'textarea', value: item?.value || '' }
+            ],
+            benefits: [
+                { key: 'icon', label: 'Icono (ej: fa-award)', type: 'text', value: item?.icon || 'fa-star' },
+                { key: 'title', label: 'Título', type: 'text', value: item?.title || '' },
+                { key: 'description', label: 'Descripción', type: 'textarea', value: item?.description || '' }
+            ]
+        };
+        return configs[section] || [];
+    }
+
+    function closeModal() {
+        document.getElementById('modalOverlay').classList.remove('active');
+        currentSection = '';
+        currentEditId = null;
+    }
+
+    // Cerrar modal con click fuera
+    document.getElementById('modalOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+    // ============================================================
+    // 9. GUARDAR DESDE MODAL
+    // ============================================================
+    document.getElementById('modalForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const section = currentSection;
+        const editId = currentEditId;
+        const items = getSection(section);
+
+        // Obtener valores del formulario
+        const fieldConfigs = getFieldConfigs(section, null);
+        const newItem = {};
+        fieldConfigs.forEach(f => {
+            const el = document.getElementById('field_' + f.key);
+            if (el) newItem[f.key] = el.value;
+        });
+
+        if (editId) {
+            // Editar
+            const index = items.findIndex(i => i.id === editId);
+            if (index !== -1) {
+                items[index] = { ...items[index], ...newItem };
+            }
+        } else {
+            // Agregar
+            newItem.id = generateId();
+            items.push(newItem);
+        }
+
+        saveSection(section, items);
+        closeModal();
+        // Recargar la sección
+        if (sectionRenderers[section]) sectionRenderers[section]();
+        loadDashboard();
+    });
+
+    // ============================================================
+    // 10. EDITAR ITEM (abre modal con datos)
+    // ============================================================
+    function editItem(section, id) {
+        openModal(section, id);
+    }
+
+    // ============================================================
+    // 11. ELIMINAR ITEM
+    // ============================================================
+    function deleteItem(section, id) {
+        if (!confirm('¿Estás seguro de eliminar este elemento?')) return;
+        const items = getSection(section);
+        const filtered = items.filter(i => i.id !== id);
+        saveSection(section, filtered);
+        if (sectionRenderers[section]) sectionRenderers[section]();
+        loadDashboard();
+    }
+
+    // ============================================================
+    // 12. EXPORTAR DATOS (Preparado para Supabase)
+    // ============================================================
+    console.log('🐾 Panel Admin La Granja');
+    console.log('📦 Datos guardados en LocalStorage');
+    console.log('🔑 Usuario: ciborg347@gmail.com');
+    console.log('🔐 Contraseña: 34714589');
+    console.log('📋 Para migrar a Supabase, reemplazar las funciones getData/saveData');
+
+    // ============================================================
+    // 13. CIERRE DE MODAL CON ESC
+    // ============================================================
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeModal();
+    });
+
+    // ============================================================
+    // 14. INICIALIZAR
+    // ============================================================
+    // Si no hay datos, guardar defaults
+    if (!localStorage.getItem('lagranja_admin_data')) {
+        saveData(defaultData);
+    }
+
+    console.log('✅ Panel Admin listo. Editá todo el contenido de la web.');
+</script>
+
+</body>
+</html>
